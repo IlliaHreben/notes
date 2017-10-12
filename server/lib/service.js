@@ -4,14 +4,16 @@ const url = 'mongodb://localhost:27017/network'
 const connect = MongoClient.connect(url)
 
 
-const createNote = (note) => {
-  return connect
+const createNote = (note) => connect
   .then(db => {
     const notes = db.collection('notes')
-    return notes.insert(note)
+    return notes.insert({text: note.text, updatedAt: new Date()})
   })
-  .then(result => ({id: result.insertedIds[0]}))
-}
+  .then(result => ({
+    id: result.insertedIds[0],
+    updatedAt: result.ops[0].updatedAt
+  }))
+
 
 const getNotes = () => {
   return connect
@@ -21,7 +23,8 @@ const getNotes = () => {
   })
   .then(notes => notes.map(note => ({
     id: note._id,
-    text: note.text
+    text: note.text,
+    updatedAt: note.updatedAt
   })))
 }
 
@@ -34,12 +37,17 @@ const deleteNote = (note) => {
 }
 
 const editNote = (note) => {
+  const updatedAt = new Date()
   return connect
   .then(db => {
     const notes = db.collection('notes')
-    return notes.update({_id: new ObjectID(note.id)} , {'$set':{text: note.text}})
+    return notes.update({_id: new ObjectID(note.id)} , {'$set':{text: note.text, updatedAt}})
   })
+  .then(() => ({
+    id: note.id,
+    text: note.text,
+    updatedAt
+  }))
 }
-
 
 module.exports = {createNote, getNotes, deleteNote, editNote}

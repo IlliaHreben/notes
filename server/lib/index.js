@@ -11,7 +11,7 @@ express.use(serveStatic('../client/public'))
 express.use(bodyParser.json())
 
 express.post('/notes', (req, res) => {
-  resToClient(res, sevice.createNote(req.body))
+  resToClient(res, service.createNote(req.body))
 })
 
 express.get('/notes', (req, res) => {
@@ -25,6 +25,7 @@ express.delete('/notes/:id', (req, res) => {
 express.put('/notes/:id', (req, res) => {
   resToClient(res, service.editNote({id: req.params.id, text: req.body.text}))
 })
+
 
 const resToClient = (res, promise) => {
   promise

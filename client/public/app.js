@@ -19,7 +19,7 @@ document.getElementById('sendNote').onclick = () => {
   .then(res => res.text())
   .then(JSON.parse)
   .then(result => {
-    const newDiv = createNoteDiv({id: result.data.id, text})
+    const newDiv = createNoteDiv({id: result.data.id, text, updatedAt: result.data.updatedAt})
     notesList.appendChild(newDiv)
   })
 }
@@ -28,8 +28,8 @@ document.getElementById('sendNote').onclick = () => {
 fetch('/notes')
 .then(res => res.text())
 .then(JSON.parse)
-.then(resBody => {
-  resBody.data.forEach(note => {
+.then(notes => {
+  notes.data.forEach(note => {
     const newDiv = createNoteDiv(note)
     notesList.appendChild(newDiv)
 
@@ -52,6 +52,9 @@ const editNote = (id, text) => {
     },
     body: JSON.stringify({id, text})
   })
+  .then(res => res.text())
+  .then(JSON.parse)
+  .then(body => body.data)
 }
 
 const createNoteDiv = (note) => {
@@ -61,14 +64,21 @@ const createNoteDiv = (note) => {
   noteTextBox.type = 'text'
   const editButton = document.createElement('button')
   const deleteButton = document.createElement('button')
+  const updatedAt = document.createElement('text')
 
   noteDiv.appendChild(noteTextBox)
   noteDiv.appendChild(editButton)
   noteDiv.appendChild(deleteButton)
+  noteDiv.appendChild(updatedAt)
+  console.log(note.updatedAt)
+  updatedAt.innerHTML = 'Last upd: ' + formatDate(note.updatedAt)
 
+////////////////////////////////////////////////////////
   noteTextBox.value = note.text
 
-  const setButtonToSave = () => {
+  setButtonToSave()
+
+  function setButtonToSave() {
     editButton.innerHTML = 'edit'
     noteTextBox.disabled = true
     editButton.onclick = () => {
@@ -76,12 +86,15 @@ const createNoteDiv = (note) => {
     }
   }
 
-  const handleNoteSave = () => {
+  function handleNoteSave() {
     setButtonToSave()
     editNote(note.id, noteTextBox.value)
+    .then(updatedNote => {
+      updatedAt.innerHTML = 'Last upd: ' + formatDate(updatedNote.updatedAt)
+    })
   }
 
-  const handleNoteEdit = () => {
+  function handleNoteEdit() {
     editButton.innerHTML = 'save'
     noteTextBox.disabled = false
     editButton.onclick = () => {
@@ -89,8 +102,8 @@ const createNoteDiv = (note) => {
     }
   }
 
-  setButtonToSave()
 
+////////////////////////////////////////////////////////
   deleteButton.innerHTML = 'x'
   deleteButton.onclick = () => {
     deleteNote(note.id)
@@ -100,6 +113,27 @@ const createNoteDiv = (note) => {
 
 }
 
+function formatDate(dateStr) {
+  const dateObj = new Date(dateStr)
+
+  const formatedTime = [
+    dateObj.getHours(),
+    dateObj.getMinutes(),
+    dateObj.getSeconds()
+  ].join(':')
+
+  const formatedDate = [
+    dateObj.getDate(),
+    dateObj.getMonth()+1,
+    dateObj.getFullYear()
+  ].join('.')
+
+  return `time: ${formatedTime}, date: ${formatedDate}`
+}
+
+// function UpdatedAt (id) {
+//   return fetch('/notes/' + id})
+// }
 
 
 // const onTextBoxClickEnable = (textbox) => {
