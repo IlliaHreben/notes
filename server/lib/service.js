@@ -15,11 +15,11 @@ const createNote = (note) => connect
   }))
 
 
-const getNotes = () => {
+const getNotes = ({order}) => {
   return connect
   .then(db => {
     const notes = db.collection('notes')
-    return notes.find({}).toArray()
+    return notes.find({}).sort({updatedAt:order}).toArray()
   })
   .then(notes => notes.map(note => ({
     id: note._id,

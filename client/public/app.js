@@ -1,14 +1,15 @@
 const notesList = document.getElementById('notesList')
+let order = -1
+document.getElementById('changeOrder').onclick = () => {
+  notesList.innerHTML = ''
+  order = -order
+  renderNotes(order)
+}
 
 document.getElementById('sendNote').onclick = () => {
   const text = document.getElementById('textNote').value
 
 
-// БЕГИ
-// теперь все єто текстбоксы задисабленные и при нажатии они становятся заенабленные и в них короч пишешь
-// а потом расфокусишься такой с этого текстбокса и он становиться опять
-// задисабленным и изменения такие воу воу воу, ты дерзкий, и изменяются
-// или не парься и сделай кнопку изменить
   fetch('/notes', {
     method: 'POST',
     headers: {
@@ -20,22 +21,32 @@ document.getElementById('sendNote').onclick = () => {
   .then(JSON.parse)
   .then(result => {
     const newDiv = createNoteDiv({id: result.data.id, text, updatedAt: result.data.updatedAt})
-    notesList.appendChild(newDiv)
+    if (order == -1) {
+      notesList.insertBefore(newDiv, notesList.firstChild)
+    } else {
+      notesList.appendChild(newDiv)
+    }
   })
 }
 
 
-fetch('/notes')
-.then(res => res.text())
-.then(JSON.parse)
-.then(notes => {
-  notes.data.forEach(note => {
-    const newDiv = createNoteDiv(note)
-    notesList.appendChild(newDiv)
+function getNotes(order) {
+  return fetch(`/notes?order=${order}`)
+  .then(res => res.text())
+  .then(JSON.parse)
+  .then(notes => notes.data)
+}
 
+function renderNotes(order) {
+  getNotes(order).then(sortedNotes => {
+    sortedNotes.forEach(note => {
+      const newDiv = createNoteDiv(note)
+      notesList.appendChild(newDiv)
+    })
   })
-})
+}
 
+renderNotes(order)
 
 const deleteNote = (id) => {
   return fetch('/notes/' + id, {
@@ -130,49 +141,3 @@ function formatDate(dateStr) {
 
   return `time: ${formatedTime}, date: ${formatedDate}`
 }
-
-// function UpdatedAt (id) {
-//   return fetch('/notes/' + id})
-// }
-
-
-// const onTextBoxClickEnable = (textbox) => {
-//   textbox.onclick = () => {
-//     textbox.disabled = 'true'
-//   }
-// }
-
-// const createTd = (value, mainEl) => {
-//   const td = document.createElement('td')
-//   td.innerHTML = value
-//   mainEl.appendChild(td)
-// }
-
-
-// fetch('/cpu-stats')
-// .then(res => res.text())
-// .then(JSON.parse)
-// .then(loadInfo => {
-//   const table = document.createElement('table')
-//   document.getElementById('result').appendChild(table)
-//   loadInfo.forEach((cpuLoad, i) => {
-//     const newTr = document.createElement('tr')
-//     table.appendChild(newTr)
-//     createTd(i+1, newTr)
-//     createTd('Load processor', newTr)
-//     createTd(cpuLoad.cpu + '%', newTr)
-//   })
-// })
-
-// .then(data => {
-//   document.getElementById('result').textContent = data
-// })
-
-// const olCreate = (mainOl, , i)
-
-
-// 5:: content type
-// body parser npm
-
-//сервер:подключаем многодбб подключаем роут, который будет принимать данные с клиента и записывать их в дб
-//клиент: создает поле для ввода, и передает данные на сервер по нажатию кнопки

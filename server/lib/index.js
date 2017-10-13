@@ -12,7 +12,8 @@ express.post('/notes', (req, res) => {
 })
 
 express.get('/notes', (req, res) => {
-  resToClient(res, service.getNotes())
+  const params = {order: Number.parseInt(req.query.order)}
+  resToClient(res, service.getNotes(params))
 })
 
 express.delete('/notes/:id', (req, res) => {
