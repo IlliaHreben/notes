@@ -24,17 +24,15 @@ express.put('/notes/:id', (req, res) => {
   resToClient(res, service.editNote({id: req.params.id, text: req.body.text}))
 })
 
-
 const resToClient = (res, promise) => {
   promise
-  .then(data => res.send({ok: true, data}))
-  .catch(error => {
-    console.error(error)
-    res
-    .status(500)
-    .send({ok: false, error: 'unknown error'})
-  })
-
+    .then(data => res.send({ok: true, data}))
+    .catch(error => {
+      console.error(error)
+      res
+        .status(500)
+        .send({ok: false, error: 'unknown error'})
+    })
 }
 
 express.listen(3000)

@@ -9,8 +9,7 @@ document.getElementById('changeOrder').onclick = () => {
 document.getElementById('sendNote').onclick = () => {
   const text = document.getElementById('textNote').value
 
-
-  fetch('/notes', {
+  window.fetch('/notes', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -21,7 +20,7 @@ document.getElementById('sendNote').onclick = () => {
   .then(JSON.parse)
   .then(result => {
     const newDiv = createNoteDiv({id: result.data.id, text, updatedAt: result.data.updatedAt})
-    if (order == -1) {
+    if (order === -1) {
       notesList.insertBefore(newDiv, notesList.firstChild)
     } else {
       notesList.appendChild(newDiv)
@@ -29,15 +28,14 @@ document.getElementById('sendNote').onclick = () => {
   })
 }
 
-
-function getNotes(order) {
-  return fetch(`/notes?order=${order}`)
+function getNotes (order) {
+  return window.fetch(`/notes?order=${order}`)
   .then(res => res.text())
   .then(JSON.parse)
   .then(notes => notes.data)
 }
 
-function renderNotes(order) {
+function renderNotes (order) {
   getNotes(order).then(sortedNotes => {
     sortedNotes.forEach(note => {
       const newDiv = createNoteDiv(note)
@@ -49,15 +47,15 @@ function renderNotes(order) {
 renderNotes(order)
 
 const deleteNote = (id) => {
-  return fetch('/notes/' + id, {
-    method : 'DELETE'
+  return window.fetch('/notes/' + id, {
+    method: 'DELETE'
   })
   .catch(console.error)
 }
 
 const editNote = (id, text) => {
-  return fetch('/notes/' + id, {
-    method : 'PUT',
+  return window.fetch('/notes/' + id, {
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json'
     },
@@ -69,7 +67,6 @@ const editNote = (id, text) => {
 }
 
 const createNoteDiv = (note) => {
-
   const noteDiv = document.createElement('div')
   const noteTextBox = document.createElement('input')
   noteTextBox.type = 'text'
@@ -84,12 +81,11 @@ const createNoteDiv = (note) => {
   console.log(note.updatedAt)
   updatedAt.innerHTML = 'Last upd: ' + formatDate(note.updatedAt)
 
-////////////////////////////////////////////////////////
   noteTextBox.value = note.text
 
   setButtonToSave()
 
-  function setButtonToSave() {
+  function setButtonToSave () {
     editButton.innerHTML = 'edit'
     noteTextBox.disabled = true
     editButton.onclick = () => {
@@ -97,15 +93,15 @@ const createNoteDiv = (note) => {
     }
   }
 
-  function handleNoteSave() {
+  function handleNoteSave () {
     setButtonToSave()
     editNote(note.id, noteTextBox.value)
-    .then(updatedNote => {
-      updatedAt.innerHTML = 'Last upd: ' + formatDate(updatedNote.updatedAt)
-    })
+      .then(updatedNote => {
+        updatedAt.innerHTML = 'Last upd: ' + formatDate(updatedNote.updatedAt)
+      })
   }
 
-  function handleNoteEdit() {
+  function handleNoteEdit () {
     editButton.innerHTML = 'save'
     noteTextBox.disabled = false
     editButton.onclick = () => {
@@ -113,18 +109,15 @@ const createNoteDiv = (note) => {
     }
   }
 
-
-////////////////////////////////////////////////////////
   deleteButton.innerHTML = 'x'
   deleteButton.onclick = () => {
     deleteNote(note.id)
     noteDiv.remove()
   }
   return noteDiv
-
 }
 
-function formatDate(dateStr) {
+function formatDate (dateStr) {
   const dateObj = new Date(dateStr)
 
   const formatedTime = [
@@ -135,7 +128,7 @@ function formatDate(dateStr) {
 
   const formatedDate = [
     dateObj.getDate(),
-    dateObj.getMonth()+1,
+    dateObj.getMonth() + 1,
     dateObj.getFullYear()
   ].join('.')
 
