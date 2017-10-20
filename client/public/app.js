@@ -1,3 +1,9 @@
+const email = new window.URLSearchParams(window.location.search).get('email')
+const password = new window.URLSearchParams(window.location.search).get('password')
+
+const userInfo = document.getElementById('email')
+userInfo.innerHTML = email
+
 const notesList = document.getElementById('notesList')
 let order = -1
 document.getElementById('changeOrder').onclick = () => {
@@ -9,12 +15,12 @@ document.getElementById('changeOrder').onclick = () => {
 document.getElementById('sendNote').onclick = () => {
   const text = document.getElementById('textNote').value
 
-  window.fetch('/notes', {
+  window.fetch('/api/notes', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({text})
+    body: JSON.stringify({text, email, password})
   })
   .then(res => res.text())
   .then(JSON.parse)
@@ -29,7 +35,7 @@ document.getElementById('sendNote').onclick = () => {
 }
 
 function getNotes (order) {
-  return window.fetch(`/notes?order=${order}`)
+  return window.fetch(`/api/notes?order=${order}&email=${email}&password=${password}`)
   .then(res => res.text())
   .then(JSON.parse)
   .then(notes => notes.data)
@@ -47,19 +53,23 @@ function renderNotes (order) {
 renderNotes(order)
 
 const deleteNote = (id) => {
-  return window.fetch('/notes/' + id, {
-    method: 'DELETE'
+  return window.fetch('/api/notes/' + id, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({email, password})
   })
   .catch(console.error)
 }
 
 const editNote = (id, text) => {
-  return window.fetch('/notes/' + id, {
+  return window.fetch('/api/notes/' + id, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({id, text})
+    body: JSON.stringify({id, text, email, password})
   })
   .then(res => res.text())
   .then(JSON.parse)
@@ -78,7 +88,6 @@ const createNoteDiv = (note) => {
   noteDiv.appendChild(editButton)
   noteDiv.appendChild(deleteButton)
   noteDiv.appendChild(updatedAt)
-  console.log(note.updatedAt)
   updatedAt.innerHTML = 'Last upd: ' + formatDate(note.updatedAt)
 
   noteTextBox.value = note.text
