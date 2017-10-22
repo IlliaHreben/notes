@@ -3,29 +3,25 @@ const {MongoClient, ObjectID} = require('mongodb')
 const url = 'mongodb://localhost:27017/network'
 const connect = MongoClient.connect(url)
 
-const createNote = (note) => connect
+const createNote = ({text, userId}) => connect
   .then(db => {
     const notes = db.collection('notes')
-    return isValidPass(note.email, note.password)
-      .then(() => {
-        return notes.insert({
-          email: note.email,
-          text: note.text,
-          updatedAt: new Date()
-        })
-      })
+    return notes.insert({
+      userId,
+      text,
+      updatedAt: new Date()
+    })
   })
   .then(result => ({
     id: result.insertedIds[0],
     updatedAt: result.ops[0].updatedAt
   }))
 
-const getNotes = ({order, email, password}) => {
+const getNotes = ({order, userId}) => {
   return connect
     .then(db => {
       const notes = db.collection('notes')
-      return isValidPass(email, password)
-        .then(() => notes.find({email}).sort({updatedAt: order}).toArray())
+      return notes.find({userId}).sort({updatedAt: order}).toArray()
     })
     .then(notes => notes.map(note => ({
       id: note._id,
@@ -34,30 +30,43 @@ const getNotes = ({order, email, password}) => {
     })))
 }
 
-const deleteNote = (note) => {
+const deleteNote = ({id, text, userId}) => {
   return connect
     .then(db => {
       const notes = db.collection('notes')
-      return isValidPass(note.email, note.password)
-        .then(() => notes.deleteOne({_id: new ObjectID(note.id)}))
+      notes.findOne({userId})
+        .then(note => {
+          if (note) {
+            return
+          }
+          throw new Error('wrong request')
+        })
+        .then(() => notes.deleteOne({_id: new ObjectID(id)}))
+
     })
     .then(() => undefined)
 }
 
-const editNote = (note) => {
+const editNote = ({id, text, userId}) => {
   const updatedAt = new Date()
   return connect
     .then(db => {
       const notes = db.collection('notes')
-      return isValidPass(note.email, note.password)
+      return notes.findOne({userId, _id: new ObjectID(id)})
+        .then(note => {
+          if (note) {
+            return
+          }
+          throw new Error('wrong request')
+        })
         .then(() => notes.update(
-          {_id: new ObjectID(note.id)},
-          {'$set': {text: note.text, updatedAt}}
+          {_id: new ObjectID(id)},
+          {'$set': {text, updatedAt}}
         ))
     })
     .then(() => ({
-      id: note.id,
-      text: note.text,
+      id,
+      text,
       updatedAt
     }))
 }
@@ -73,31 +82,31 @@ const createUser = (regData) => connect
         return users.insert({email: regData.email, password: regData.password})
       })
   })
-  .then(() => undefined)
+  .then((user) => undefined)
 
-const authUser = (authData) => connect
+const authUser = ({email, password}) => connect
   .then(db => {
-    const users = db.collection('users')
-    return users.find({email: authData.email}).toArray()
-      .then(user => {
-        if (authData.password === user.password) {
-          return {ok: true}
-        }
-        return undefined
-      })
-  })
-
-function isValidPass (email, pass) {
-  return connect.then(db => {
     const users = db.collection('users')
     return users.findOne({email})
   })
-    .then(user => {
-      if (user.password !== pass) {
-        throw new Error('password is not correctly')
-      }
-      return {ok: true}
-    })
+  .then(user => {
+    if (user.password === password) {
+      return {userId: user._id}
+    }
+    throw new Error('user wasn\'t found in database')
+  })
+
+function checkUser (userId) {
+  return connect.then(db => {
+    const users = db.collection('users')
+    return users.findOne({_id: new ObjectID(userId)})
+  })
+  .then(user => {
+    if (user) {
+      return user
+    }
+    throw new Error('Invalid user id')
+  })
 }
 
-module.exports = {createNote, getNotes, deleteNote, editNote, createUser, authUser}
+module.exports = {createNote, getNotes, deleteNote, editNote, createUser, authUser, checkUser}

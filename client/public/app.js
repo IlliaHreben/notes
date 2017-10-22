@@ -1,8 +1,7 @@
-const email = new window.URLSearchParams(window.location.search).get('email')
-const password = new window.URLSearchParams(window.location.search).get('password')
+const userId = new window.URLSearchParams(window.location.search).get('id')
 
-const userInfo = document.getElementById('email')
-userInfo.innerHTML = email
+// const userInfo = document.getElementById('email')
+// userInfo.innerHTML = email
 
 const notesList = document.getElementById('notesList')
 let order = -1
@@ -18,9 +17,10 @@ document.getElementById('sendNote').onclick = () => {
   window.fetch('/api/notes', {
     method: 'POST',
     headers: {
+      'Authorization': userId,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({text, email, password})
+    body: JSON.stringify({text})
   })
   .then(res => res.text())
   .then(JSON.parse)
@@ -35,7 +35,11 @@ document.getElementById('sendNote').onclick = () => {
 }
 
 function getNotes (order) {
-  return window.fetch(`/api/notes?order=${order}&email=${email}&password=${password}`)
+  return window.fetch(`/api/notes?order=${order}`, {
+    headers: {
+      'Authorization': userId
+    }
+  })
   .then(res => res.text())
   .then(JSON.parse)
   .then(notes => notes.data)
@@ -56,9 +60,9 @@ const deleteNote = (id) => {
   return window.fetch('/api/notes/' + id, {
     method: 'DELETE',
     headers: {
+      'Authorization': userId,
       'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({email, password})
+    }
   })
   .catch(console.error)
 }
@@ -67,9 +71,10 @@ const editNote = (id, text) => {
   return window.fetch('/api/notes/' + id, {
     method: 'PUT',
     headers: {
+      'Authorization': userId,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({id, text, email, password})
+    body: JSON.stringify({id, text})
   })
   .then(res => res.text())
   .then(JSON.parse)

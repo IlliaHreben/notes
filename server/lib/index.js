@@ -18,40 +18,53 @@ const app = express()
   .use(serveStatic('../client/public', {extensions: ['html']}))
   .use(bodyParser.json())
 
-const api = express.Router()
-  .post('/notes', (req, res) => {
-    resToClient(res, service.createNote(req.body))
+const notes = express.Router()
+  .use(checkUser)
+  .post('/', (req, res) => {
+    resToClient(res, service.createNote({
+      text: req.body.text,
+      userId: req.headers.authorization
+    }))
   })
-  .get('/notes', (req, res) => {
+  .get('/', (req, res) => {
     const params = {
       order: Number.parseInt(req.query.order),
-      email: req.query.email,
-      password: req.query.password
+      userId: req.headers.authorization
     }
     resToClient(res, service.getNotes(params))
   })
-  .delete('/notes/:id', (req, res) => {
+  .delete('/:id', (req, res) => {
     resToClient(res, service.deleteNote({
       id: req.params.id,
       text: req.params.text,
-      email: req.body.email,
-      password: req.body.password
+      userId: req.headers.authorization
     }))
   })
-  .put('/notes/:id', (req, res) => {
+  .put('/:id', (req, res) => {
     resToClient(res, service.editNote({
       id: req.params.id,
       text: req.body.text,
-      email: req.body.email,
-      password: req.body.password
+      userId: req.headers.authorization
     }))
   })
+
+const api = express.Router()
+  .use('/notes', notes)
   .post('/registration', (req, res) => {
     resToClient(res, service.createUser(req.body))
   })
   .post('/authorization', (req, res) => {
     resToClient(res, service.authUser(req.body))
   })
+
+function checkUser (req, res, next) {
+  service.checkUser(req.headers.authorization)
+    .then(() => next())
+    .catch(error => {
+      console.error(error)
+      res.send({ok: false, error: error.message})
+    })
+}
 
 app.use('/api', api)
 app.listen(3000)
