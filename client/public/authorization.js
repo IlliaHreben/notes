@@ -13,8 +13,9 @@ document.getElementById('authorization').onclick = () => {
   .then(JSON.parse)
   .then(result => {
     if (result.ok) {
+      window.localStorage.setItem('token', result.data.token)
       window.alert('authorization is successful')
-      window.location.href = `/?token=${result.data.token}`
+      window.location.href = `/`
     } else {
       window.alert(result.error)
     }

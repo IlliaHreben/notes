@@ -1,14 +1,25 @@
-const token = new window.URLSearchParams(window.location.search).get('token')
+const token = window.localStorage.getItem('token')
+if (!token) {
+  window.location.href = '/authorization'
+} else {
+  renderNotes(getOrder())
+}
 
-// const userInfo = document.getElementById('email')
-// userInfo.innerHTML = email
+function toggleOrder () {
+  let sortOrder = getOrder()
+  sortOrder = -sortOrder
+  window.localStorage.setItem('sortOrder', sortOrder)
+  return sortOrder
+}
+
+function getOrder () {
+  return Number.parseInt(window.localStorage.getItem('sortOrder') || '-1')
+}
 
 const notesList = document.getElementById('notesList')
-let order = -1
 document.getElementById('changeOrder').onclick = () => {
   notesList.innerHTML = ''
-  order = -order
-  renderNotes(order)
+  renderNotes(toggleOrder())
 }
 
 document.getElementById('sendNote').onclick = () => {
@@ -26,7 +37,7 @@ document.getElementById('sendNote').onclick = () => {
   .then(JSON.parse)
   .then(result => {
     const newDiv = createNoteDiv({id: result.data.id, text, updatedAt: result.data.updatedAt})
-    if (order === -1) {
+    if (getOrder() === -1) {
       notesList.insertBefore(newDiv, notesList.firstChild)
     } else {
       notesList.appendChild(newDiv)
@@ -53,8 +64,6 @@ function renderNotes (order) {
     })
   })
 }
-
-renderNotes(order)
 
 const deleteNote = (id) => {
   return window.fetch('/api/notes/' + id, {
