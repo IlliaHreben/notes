@@ -14,7 +14,7 @@ document.getElementById('authorization').onclick = () => {
   .then(result => {
     if (result.ok) {
       window.alert('authorization is successful')
-      window.location.href = `/?id=${result.data.userId}`
+      window.location.href = `/?token=${result.data.token}`
     } else {
       window.alert(result.error)
     }

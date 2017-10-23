@@ -23,13 +23,13 @@ const notes = express.Router()
   .post('/', (req, res) => {
     resToClient(res, service.createNote({
       text: req.body.text,
-      userId: req.headers.authorization
+      userId: req.context.user._id
     }))
   })
   .get('/', (req, res) => {
     const params = {
       order: Number.parseInt(req.query.order),
-      userId: req.headers.authorization
+      userId: req.context.user._id
     }
     resToClient(res, service.getNotes(params))
   })
@@ -37,14 +37,14 @@ const notes = express.Router()
     resToClient(res, service.deleteNote({
       id: req.params.id,
       text: req.params.text,
-      userId: req.headers.authorization
+      userId: req.context.user._id
     }))
   })
   .put('/:id', (req, res) => {
     resToClient(res, service.editNote({
       id: req.params.id,
       text: req.body.text,
-      userId: req.headers.authorization
+      userId: req.context.user._id
     }))
   })
 
@@ -59,7 +59,10 @@ const api = express.Router()
 
 function checkUser (req, res, next) {
   service.checkUser(req.headers.authorization)
-    .then(() => next())
+    .then(user => {
+      req.context = {user}
+      next()
+    })
     .catch(error => {
       console.error(error)
       res.send({ok: false, error: error.message})

@@ -1,4 +1,4 @@
-const userId = new window.URLSearchParams(window.location.search).get('id')
+const token = new window.URLSearchParams(window.location.search).get('token')
 
 // const userInfo = document.getElementById('email')
 // userInfo.innerHTML = email
@@ -17,7 +17,7 @@ document.getElementById('sendNote').onclick = () => {
   window.fetch('/api/notes', {
     method: 'POST',
     headers: {
-      'Authorization': userId,
+      'Authorization': token,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({text})
@@ -37,7 +37,7 @@ document.getElementById('sendNote').onclick = () => {
 function getNotes (order) {
   return window.fetch(`/api/notes?order=${order}`, {
     headers: {
-      'Authorization': userId
+      'Authorization': token
     }
   })
   .then(res => res.text())
@@ -60,7 +60,7 @@ const deleteNote = (id) => {
   return window.fetch('/api/notes/' + id, {
     method: 'DELETE',
     headers: {
-      'Authorization': userId,
+      'Authorization': token,
       'Content-Type': 'application/json'
     }
   })
@@ -71,7 +71,7 @@ const editNote = (id, text) => {
   return window.fetch('/api/notes/' + id, {
     method: 'PUT',
     headers: {
-      'Authorization': userId,
+      'Authorization': token,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({id, text})

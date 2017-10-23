@@ -1,4 +1,6 @@
 const {MongoClient, ObjectID} = require('mongodb')
+const jwt = require('jwt-simple')
+const secret = 'aaa'
 
 const url = 'mongodb://localhost:27017/network'
 const connect = MongoClient.connect(url)
@@ -34,15 +36,14 @@ const deleteNote = ({id, text, userId}) => {
   return connect
     .then(db => {
       const notes = db.collection('notes')
-      notes.findOne({userId})
+      return notes.findOne({_id: new ObjectID(id)})
         .then(note => {
-          if (note) {
+          if (note.userId.equals(userId)) {
             return
           }
           throw new Error('wrong request')
         })
         .then(() => notes.deleteOne({_id: new ObjectID(id)}))
-
     })
     .then(() => undefined)
 }
@@ -52,9 +53,9 @@ const editNote = ({id, text, userId}) => {
   return connect
     .then(db => {
       const notes = db.collection('notes')
-      return notes.findOne({userId, _id: new ObjectID(id)})
+      return notes.findOne({_id: new ObjectID(id)})
         .then(note => {
-          if (note) {
+          if (note.userId.equals(userId)) {
             return
           }
           throw new Error('wrong request')
@@ -91,22 +92,22 @@ const authUser = ({email, password}) => connect
   })
   .then(user => {
     if (user.password === password) {
-      return {userId: user._id}
+      return {token: jwt.encode({userId: user._id}, secret)}
     }
     throw new Error('user wasn\'t found in database')
   })
 
-function checkUser (userId) {
+function checkUser (token) {
   return connect.then(db => {
     const users = db.collection('users')
-    return users.findOne({_id: new ObjectID(userId)})
+    return users.findOne({_id: new ObjectID(jwt.decode(token, secret).userId)})
   })
-  .then(user => {
-    if (user) {
-      return user
-    }
-    throw new Error('Invalid user id')
-  })
+    .then(user => {
+      if (user) {
+        return user
+      }
+      throw new Error('Invalid user id')
+    })
 }
 
 module.exports = {createNote, getNotes, deleteNote, editNote, createUser, authUser, checkUser}

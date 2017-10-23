@@ -12,6 +12,7 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.15.4",
+    "jwt-simple": "^0.5.1",
     "mongodb": "^2.2.31",
     "serve-static": "^1.12.6"
   },
