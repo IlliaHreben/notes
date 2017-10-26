@@ -20,3 +20,7 @@ document.getElementById('registration').onclick = () => {
     }
   })
 }
+
+document.getElementById('goToAuthorization').onclick = () => {
+  window.location.href = `/authorization`
+}

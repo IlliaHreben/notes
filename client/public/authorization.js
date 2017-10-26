@@ -21,3 +21,7 @@ document.getElementById('authorization').onclick = () => {
     }
   })
 }
+
+document.getElementById('goToRegistration').onclick = () => {
+  window.location.href = `/registration`
+}

@@ -16,6 +16,11 @@ function getOrder () {
   return Number.parseInt(window.localStorage.getItem('sortOrder') || '-1')
 }
 
+document.getElementById('exit').onclick = () => {
+  window.localStorage.removeItem('token')
+  window.location.href = '/authorization'
+}
+
 const notesList = document.getElementById('notesList')
 document.getElementById('changeOrder').onclick = () => {
   notesList.innerHTML = ''
