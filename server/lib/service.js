@@ -1,6 +1,10 @@
 const {MongoClient, ObjectID} = require('mongodb')
+
 const jwt = require('jwt-simple')
 const secret = 'aaa'
+
+const bcrypt = require('bcrypt')
+const saltRounds = 10
 
 const url = 'mongodb://localhost:27017/network'
 const connect = MongoClient.connect(url)
@@ -80,7 +84,9 @@ const createUser = (regData) => connect
         if (user) {
           throw new Error('email was found in database')
         }
-        return users.insert({email: regData.email, password: regData.password})
+        return bcrypt.hash(regData.password, saltRounds).then(hash => {
+          return users.insert({email: regData.email, password: hash})
+        })
       })
   })
   .then((user) => undefined)
@@ -91,10 +97,12 @@ const authUser = ({email, password}) => connect
     return users.findOne({email})
   })
   .then(user => {
-    if (user.password === password) {
-      return {token: jwt.encode({userId: user._id}, secret)}
-    }
-    throw new Error('user wasn\'t found in database')
+    return bcrypt.compare(password, user.password).then(res => {
+      if (res) {
+        return {token: jwt.encode({userId: user._id}, secret)}
+      }
+      throw new Error('wrong password')
+    })
   })
 
 function checkUser (token) {
@@ -106,7 +114,7 @@ function checkUser (token) {
       if (user) {
         return user
       }
-      throw new Error('Invalid user id')
+      throw new Error('invalid user id')
     })
 }
 
