@@ -84,10 +84,9 @@ const createUser = (regData) => connect
         if (user) {
           throw new Error('email was found in database')
         }
-        return bcrypt.hash(regData.password, saltRounds).then(hash => {
-          return users.insert({email: regData.email, password: hash})
-        })
+        return bcrypt.hash(regData.password, saltRounds)
       })
+      .then(hash => users.insert({email: regData.email, password: hash}))
   })
   .then((user) => undefined)
 
