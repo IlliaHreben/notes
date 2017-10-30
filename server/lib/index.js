@@ -7,10 +7,9 @@ const resToClient = (res, promise) => {
   promise
     .then(data => res.send({ok: true, data}))
     .catch(error => {
-      console.error(error)
       res
         .status(500)
-        .send({ok: false, error: 'unknown error'})
+        .send({ok: false, error: error.message})
     })
 }
 
@@ -62,10 +61,6 @@ function checkUser (req, res, next) {
     .then(user => {
       req.context = {user}
       next()
-    })
-    .catch(error => {
-      console.error(error)
-      res.send({ok: false, error: error.message})
     })
 }
 

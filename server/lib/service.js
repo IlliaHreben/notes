@@ -76,19 +76,34 @@ const editNote = ({id, text, userId}) => {
     }))
 }
 
-const createUser = (regData) => connect
-  .then(db => {
-    const users = db.collection('users')
-    return users.findOne({email: regData.email})
-      .then(user => {
-        if (user) {
-          throw new Error('email was found in database')
-        }
-        return bcrypt.hash(regData.password, saltRounds)
+const createUser = (regData) => {
+  return isEmailValid(regData.email).then(() => {
+    return connect
+      .then(db => {
+        const users = db.collection('users')
+        return users.findOne({email: regData.email})
+          .then(user => {
+            if (user) {
+              throw new Error('a user with this email already exists')
+            }
+            return bcrypt.hash(regData.password, saltRounds)
+          })
+          .then(hash => users.insert({email: regData.email, password: hash}))
       })
-      .then(hash => users.insert({email: regData.email, password: hash}))
+      .then((user) => undefined)
   })
-  .then((user) => undefined)
+}
+
+function isEmailValid (email) {
+  const validEmails = 'ukr.net, mail.ru, gmail.com'
+  const isDomenOk = new RegExp(email).test(validEmails)
+  if (!isDomenOk) {
+    return Promise.reject(new Error('invalid email: (@xxx.xx)'))
+  } else if (email.indexOf('@') === -1) {
+    return Promise.reject(new Error('invalid email: (@)'))
+  }
+  return Promise.resolve({ok: true})
+}
 
 const authUser = ({email, password}) => connect
   .then(db => {
@@ -96,12 +111,15 @@ const authUser = ({email, password}) => connect
     return users.findOne({email})
   })
   .then(user => {
-    return bcrypt.compare(password, user.password).then(res => {
-      if (res) {
-        return {token: jwt.encode({userId: user._id}, secret)}
-      }
-      throw new Error('wrong password')
-    })
+    if (user) {
+      return bcrypt.compare(password, user.password).then(res => {
+        if (res) {
+          return {token: jwt.encode({userId: user._id}, secret)}
+        }
+        throw new Error('wrong password')
+      })
+    }
+    throw new Error('wrong email')
   })
 
 function checkUser (token) {
