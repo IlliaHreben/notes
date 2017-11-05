@@ -2,9 +2,11 @@ document.getElementById('authorization').onclick = () => {
   const email = document.getElementById('email').value
   const password = document.getElementById('password').value
 
-  if (email || password === '') {
-    window.alert('data was not entered')
+  if (email === '') {
+    window.alert('email was not entered')
     return
+  } else if (password === '') {
+    window.alert('password was not entered')
   }
 
   window.fetch('/api/authorization', {
