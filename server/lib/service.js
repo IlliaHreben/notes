@@ -77,7 +77,9 @@ const editNote = ({id, text, userId}) => {
 }
 
 const createUser = (regData) => {
-  return isEmailValid(regData.email).then(() => connect)
+  return Promise.resolve()
+    .then(() => isEmailValid(regData.email))
+    .then(() => connect)
     .then(db => {
       const users = db.collection('users')
       return users.findOne({email: regData.email})
@@ -93,12 +95,11 @@ const createUser = (regData) => {
 }
 
 function isEmailValid (email) {
-  const validEmails = '@ukr.net, @mail.ru, @gmail.com'
-  const isDomainOk = new RegExp(email).test(validEmails)
+  const validEmails = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  const isDomainOk = validEmails.test(email)
   if (!isDomainOk) {
-    return Promise.reject(new Error('invalid email: (@xxx.xx)'))
+    throw new Error('invalid email: (@xxx.xx)')
   }
-  return Promise.resolve({ok: true})
 }
 
 const authUser = ({email, password}) => connect
