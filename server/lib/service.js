@@ -9,6 +9,8 @@ const saltRounds = 10
 const url = 'mongodb://localhost:27017/network'
 const connect = MongoClient.connect(url)
 
+const isValidEmail = require('is-valid-email')
+
 const createNote = ({text, userId}) => connect
   .then(db => {
     const notes = db.collection('notes')
@@ -95,9 +97,7 @@ const createUser = (regData) => {
 }
 
 function isEmailValid (email) {
-  const validEmails = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  const isDomainOk = validEmails.test(email)
-  if (!isDomainOk) {
+  if (!isValidEmail(email)) {
     throw new Error('invalid email: (@xxx.xx)')
   }
 }

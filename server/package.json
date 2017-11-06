@@ -10,8 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "express": "^4.15.4",
+    "is-valid-email": "0.0.2",
     "jwt-simple": "^0.5.1",
     "mongodb": "^2.2.31",
     "serve-static": "^1.12.6"
