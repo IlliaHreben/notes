@@ -3,7 +3,7 @@ const {MongoClient, ObjectID} = require('mongodb')
 const jwt = require('jwt-simple')
 const secret = 'aaa'
 
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const saltRounds = 10
 
 function getMongoUri () {
@@ -101,7 +101,9 @@ const createUser = (regData) => {
           }
           return bcrypt.hash(regData.password, saltRounds)
         })
-        .then(hash => users.insert({email: regData.email, password: hash}))
+        .then(hash => {
+          users.insert({email: regData.email, password: hash})
+        })
     })
     .then(() => undefined)
 }
