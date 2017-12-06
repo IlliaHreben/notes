@@ -5,6 +5,29 @@ if (!token) {
   renderNotes(getOrder())
 }
 
+function getOrder () {
+  return Number.parseInt(window.localStorage.getItem('sortOrder') || '-1') // оптимизировать
+}
+
+function renderNotes (order) {
+  getNotes(order).then(sortedNotes => {
+    sortedNotes.forEach(note => {
+      const newDiv = createNoteDiv(note)
+      notesList.appendChild(newDiv)
+    })
+  })
+}
+
+function getNotes (order) {
+  return window.fetch(`/api/notes?order=${order}`, {
+    headers: {
+      'Authorization': token
+    }
+  })
+  .then(handleResponse)
+  .then(notes => notes)
+}
+
 function toggleOrder () {
   let sortOrder = getOrder()
   sortOrder = -sortOrder
@@ -12,13 +35,23 @@ function toggleOrder () {
   return sortOrder
 }
 
-function getOrder () {
-  return Number.parseInt(window.localStorage.getItem('sortOrder') || '-1')
-}
-
 document.getElementById('exit').onclick = () => {
   window.localStorage.removeItem('token')
   window.location.href = '/authorization'
+}
+
+document.getElementById('dellAllNotes').onclick = () => {
+  window.fetch('/api/notes', {
+    method: 'DELETE',
+    headers: {
+      'Authorization': token,
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(handleResponse)
+    .then(() => {
+      notesList.innerHTML = ''
+    })
 }
 
 const notesList = document.getElementById('notesList')
@@ -38,35 +71,14 @@ document.getElementById('sendNote').onclick = () => {
     },
     body: JSON.stringify({text})
   })
-  .then(res => res.text())
-  .then(JSON.parse)
+  .then(handleResponse)
   .then(result => {
-    const newDiv = createNoteDiv({id: result.data.id, text, updatedAt: result.data.updatedAt})
+    const newDiv = createNoteDiv({id: result.id, text, updatedAt: result.updatedAt})
     if (getOrder() === -1) {
       notesList.insertBefore(newDiv, notesList.firstChild)
     } else {
       notesList.appendChild(newDiv)
     }
-  })
-}
-
-function getNotes (order) {
-  return window.fetch(`/api/notes?order=${order}`, {
-    headers: {
-      'Authorization': token
-    }
-  })
-  .then(res => res.text())
-  .then(JSON.parse)
-  .then(notes => notes.data)
-}
-
-function renderNotes (order) {
-  getNotes(order).then(sortedNotes => {
-    sortedNotes.forEach(note => {
-      const newDiv = createNoteDiv(note)
-      notesList.appendChild(newDiv)
-    })
   })
 }
 
@@ -78,7 +90,7 @@ const deleteNote = (id) => {
       'Content-Type': 'application/json'
     }
   })
-  .catch(console.error)
+  .then(handleResponse)
 }
 
 const editNote = (id, text) => {
@@ -90,9 +102,8 @@ const editNote = (id, text) => {
     },
     body: JSON.stringify({id, text})
   })
-  .then(res => res.text())
-  .then(JSON.parse)
-  .then(body => body.data)
+  .then(handleResponse)
+  .then(body => body)
 }
 
 const createNoteDiv = (note) => {
@@ -140,7 +151,7 @@ const createNoteDiv = (note) => {
   deleteButton.innerHTML = 'x'
   deleteButton.onclick = () => {
     deleteNote(note.id)
-    noteDiv.remove()
+    .then(() => noteDiv.remove())
   }
   return noteDiv
 }
@@ -161,4 +172,15 @@ function formatDate (dateStr) {
   ].join('.')
 
   return `time: ${formatedTime}, date: ${formatedDate}`
+}
+
+function handleResponse (res) {
+  return res.text()
+    .then(JSON.parse)
+    .then(body => {
+      if (body.ok) {
+        return body.data
+      }
+      throw new Error(body.error)
+    })
 }

@@ -7,6 +7,7 @@ const resToClient = (res, promise) => {
   promise
     .then(data => res.send({ok: true, data}))
     .catch(error => {
+      console.log(error)
       res
         .status(500)
         .send({ok: false, error: error.message})
@@ -43,6 +44,11 @@ const notes = express.Router()
     resToClient(res, service.editNote({
       id: req.params.id,
       text: req.body.text,
+      userId: req.context.user._id
+    }))
+  })
+  .delete('/', (req, res) => {
+    resToClient(res, service.dellAllNotes({
       userId: req.context.user._id
     }))
   })

@@ -131,6 +131,15 @@ const authUser = ({email, password}) => connect
     })
   })
 
+const dellAllNotes = ({userId}) => {
+  return connect
+    .then(db => {
+      const notes = db.collection('notes')
+      return notes.remove({userId})
+    })
+    .then(() => undefined)
+}
+
 function checkUser (token) {
   return connect.then(db => {
     const users = db.collection('users')
@@ -144,4 +153,4 @@ function checkUser (token) {
     })
 }
 
-module.exports = {createNote, getNotes, deleteNote, editNote, createUser, authUser, checkUser}
+module.exports = {createNote, getNotes, deleteNote, editNote, createUser, authUser, checkUser, dellAllNotes}
