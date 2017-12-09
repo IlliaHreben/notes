@@ -5,14 +5,11 @@ document.getElementById('registration').onclick = () => {
   const password = document.getElementById('password').value
 
   users.registration(email, password)
-  .then(result => {
-    if (result.ok) {
-      window.alert('registration is successful')
-      window.location.href = '/authorization'
-    } else {
-      errorHandler('emptyDiv', result.error)
-    }
+  .then(data => {
+    window.alert('registration is successful')
+    window.location.href = '/authorization'
   })
+  .catch(error => errorHandler('emptyDiv', error))
 }
 
 document.getElementById('goToAuthorization').onclick = () => {

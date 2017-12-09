@@ -2,15 +2,22 @@ const express = require('express')
 const serveStatic = require('serve-static')
 const bodyParser = require('body-parser')
 const service = require('./service')
+const ServiceError = require('./ServiceError')
 
 const resToClient = (res, promise) => {
   promise
     .then(data => res.send({ok: true, data}))
     .catch(error => {
       console.log(error)
-      res
-        .status(500)
-        .send({ok: false, error: error.message})
+      if (error instanceof ServiceError) {
+        res
+          .status(400)
+          .send({ok: false, error: {message: error.message, code: error.code}})
+      } else {
+        res
+          .status(500)
+          .send({ok: false, error: {message: 'unknown server error', code: 'UNKNOWN_ERROR'}})
+      }
     })
 }
 

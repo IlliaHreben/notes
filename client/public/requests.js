@@ -61,8 +61,7 @@ const users = {
       },
       body: JSON.stringify({email, password})
     })
-    .then(res => res.text())
-    .then(JSON.parse)
+    .then(handleResponse)
   },
   registration: function (email, password) {
     return window.fetch('/api/registration', {
@@ -72,8 +71,7 @@ const users = {
       },
       body: JSON.stringify({email, password})
     })
-    .then(res => res.text())
-    .then(JSON.parse)
+    .then(handleResponse)
   }
 }
 
@@ -82,7 +80,7 @@ function errorHandler (nameMainDiv, errorResult) {
   const errorText = document.createElement('text')
   const exitButton = document.createElement('button')
   exitButton.innerHTML = 'x'
-  errorText.innerHTML = 'error. ' + errorResult
+  errorText.innerHTML = 'error. ' + errorResult.message
   messageDiv.appendChild(errorText)
   messageDiv.appendChild(exitButton)
   exitButton.onclick = () => {
@@ -97,7 +95,7 @@ function handleResponse (res) {
       if (body.ok) {
         return body.data
       }
-      throw new Error(body.error)
+      throw body.error
     })
 }
 

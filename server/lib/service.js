@@ -1,3 +1,4 @@
+const ServiceError = require('./ServiceError')
 const {MongoClient, ObjectID} = require('mongodb')
 
 const jwt = require('jwt-simple')
@@ -57,7 +58,7 @@ const deleteNote = ({id, text, userId}) => {
           if (note.userId.equals(userId)) {
             return
           }
-          throw new Error('wrong request')
+          throw new ServiceError('cannot delete note', 'WRONG_ID')
         })
         .then(() => notes.deleteOne({_id: new ObjectID(id)}))
     })
@@ -74,7 +75,7 @@ const editNote = ({id, text, userId}) => {
           if (note.userId.equals(userId)) {
             return
           }
-          throw new Error('wrong request')
+          throw new ServiceError('cannot edit note', 'WRONG_ID')
         })
         .then(() => notes.update(
           {_id: new ObjectID(id)},
@@ -97,7 +98,7 @@ const createUser = (regData) => {
       return users.findOne({email: regData.email})
         .then(user => {
           if (user) {
-            throw new Error('a user with this email already exists')
+            throw new ServiceError('a user with this email already exists', 'NOT_UNIQUE')
           }
           return bcrypt.hash(regData.password, saltRounds)
         })
@@ -110,7 +111,7 @@ const createUser = (regData) => {
 
 function isEmailValid (email) {
   if (!isValidEmail(email)) {
-    throw new Error('invalid email: (@xxx.xx)')
+    throw new ServiceError('invalid email: (@xxx.xx)', 'INVALID_EMAIL')
   }
 }
 
@@ -121,11 +122,11 @@ const authUser = ({email, password}) => connect
   })
   .then(user => {
     if (!user) {
-      throw new Error('wrong email')
+      throw new ServiceError('email was not found', 'WRONG_EMAIL')
     }
     return bcrypt.compare(password, user.password).then(res => {
       if (!res) {
-        throw new Error('wrong password')
+        throw new ServiceError('wrong password', 'WRONG_PASS')
       }
       return {token: jwt.encode({userId: user._id}, secret)}
     })
@@ -149,7 +150,7 @@ function checkUser (token) {
       if (user) {
         return user
       }
-      throw new Error('invalid user id')
+      throw new ServiceError('invalid user id', 'WRONG_ID')
     })
 }
 

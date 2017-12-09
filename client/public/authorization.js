@@ -12,15 +12,11 @@ document.getElementById('authorization').onclick = () => {
   }
 
   users.authorization(email, password)
-  .then(result => {
-    if (result.ok) {
-      window.localStorage.setItem('token', result.data.token)
-      window.alert('authorization is successful')
-      window.location.href = `/`
-    } else {
-      errorHandler('emptyDiv', result.error)
-    }
+  .then(data => {
+    window.localStorage.setItem('token', data.token)
+    window.location.href = `/`
   })
+  .catch(error => errorHandler('emptyDiv', error))
 }
 
 document.getElementById('goToRegistration').onclick = () => {
