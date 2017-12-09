@@ -1,3 +1,64 @@
+// const requests = {
+//   ololo: '',
+//   notes: {
+//     getNotes: function (order) {
+//       return window.fetch(`/api/notes?order=${order}`, {
+//         headers: {
+//           'Authorization': token
+//         }
+//       })
+//       .then(handleResponse)
+//     },
+//     dellAllNotes: function () {
+//       return window.fetch('/api/notes', {
+//         method: 'DELETE',
+//         headers: {
+//           'Authorization': token,
+//           'Content-Type': 'application/json'
+//         }
+//       })
+//         .then(handleResponse)
+//     },
+//     sendNote: function (text) {
+//       return window.fetch('/api/notes', {
+//         method: 'POST',
+//         headers: {
+//           'Authorization': token,
+//           'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({text})
+//       })
+//       .then(handleResponse)
+//     },
+//     deleteNote: function (id) {
+//       return window.fetch('/api/notes/' + id, {
+//         method: 'DELETE',
+//         headers: {
+//           'Authorization': token,
+//           'Content-Type': 'application/json'
+//         }
+//       })
+//       .then(handleResponse)
+//     },
+//     editNote: function (id, text) {
+//       return window.fetch('/api/notes/' + id, {
+//         method: 'PUT',
+//         headers: {
+//           'Authorization': token,
+//           'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({id, text})
+//       })
+//       .then(handleResponse)
+//     }
+//   },
+//   autorization: {
+//
+//   }
+// }
+
+import {notes as requests} from './requests.js'
+
 const token = window.localStorage.getItem('token')
 if (!token) {
   window.location.href = '/authorization'
@@ -10,22 +71,12 @@ function getOrder () {
 }
 
 function renderNotes (order) {
-  getNotes(order).then(sortedNotes => {
+  requests.getNotes(order).then(sortedNotes => {
     sortedNotes.forEach(note => {
       const newDiv = createNoteDiv(note)
       notesList.appendChild(newDiv)
     })
   })
-}
-
-function getNotes (order) {
-  return window.fetch(`/api/notes?order=${order}`, {
-    headers: {
-      'Authorization': token
-    }
-  })
-  .then(handleResponse)
-  .then(notes => notes)
 }
 
 function toggleOrder () {
@@ -41,17 +92,10 @@ document.getElementById('exit').onclick = () => {
 }
 
 document.getElementById('dellAllNotes').onclick = () => {
-  window.fetch('/api/notes', {
-    method: 'DELETE',
-    headers: {
-      'Authorization': token,
-      'Content-Type': 'application/json'
-    }
+  requests.dellAllNotes()
+  .then(() => {
+    notesList.innerHTML = ''
   })
-    .then(handleResponse)
-    .then(() => {
-      notesList.innerHTML = ''
-    })
 }
 
 const notesList = document.getElementById('notesList')
@@ -63,15 +107,7 @@ document.getElementById('changeOrder').onclick = () => {
 document.getElementById('sendNote').onclick = () => {
   const text = document.getElementById('textNote').value
 
-  window.fetch('/api/notes', {
-    method: 'POST',
-    headers: {
-      'Authorization': token,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({text})
-  })
-  .then(handleResponse)
+  requests.sendNote(text)
   .then(result => {
     const newDiv = createNoteDiv({id: result.id, text, updatedAt: result.updatedAt})
     if (getOrder() === -1) {
@@ -80,30 +116,6 @@ document.getElementById('sendNote').onclick = () => {
       notesList.appendChild(newDiv)
     }
   })
-}
-
-const deleteNote = (id) => {
-  return window.fetch('/api/notes/' + id, {
-    method: 'DELETE',
-    headers: {
-      'Authorization': token,
-      'Content-Type': 'application/json'
-    }
-  })
-  .then(handleResponse)
-}
-
-const editNote = (id, text) => {
-  return window.fetch('/api/notes/' + id, {
-    method: 'PUT',
-    headers: {
-      'Authorization': token,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({id, text})
-  })
-  .then(handleResponse)
-  .then(body => body)
 }
 
 const createNoteDiv = (note) => {
@@ -134,7 +146,7 @@ const createNoteDiv = (note) => {
 
   function handleNoteSave () {
     setButtonToSave()
-    editNote(note.id, noteTextBox.value)
+    requests.editNote(note.id, noteTextBox.value)
       .then(updatedNote => {
         updatedAt.innerHTML = 'Last upd: ' + formatDate(updatedNote.updatedAt)
       })
@@ -150,7 +162,7 @@ const createNoteDiv = (note) => {
 
   deleteButton.innerHTML = 'x'
   deleteButton.onclick = () => {
-    deleteNote(note.id)
+    requests.deleteNote(note.id)
     .then(() => noteDiv.remove())
   }
   return noteDiv
@@ -172,15 +184,4 @@ function formatDate (dateStr) {
   ].join('.')
 
   return `time: ${formatedTime}, date: ${formatedDate}`
-}
-
-function handleResponse (res) {
-  return res.text()
-    .then(JSON.parse)
-    .then(body => {
-      if (body.ok) {
-        return body.data
-      }
-      throw new Error(body.error)
-    })
 }

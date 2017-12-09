@@ -1,3 +1,5 @@
+import {users} from './requests.js'
+
 document.getElementById('authorization').onclick = () => {
   const email = document.getElementById('email').value
   const password = document.getElementById('password').value
@@ -9,15 +11,7 @@ document.getElementById('authorization').onclick = () => {
     window.alert('password was not entered')
   }
 
-  window.fetch('/api/authorization', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({email, password})
-  })
-  .then(res => res.text())
-  .then(JSON.parse)
+  users.authorization(email, password)
   .then(result => {
     if (result.ok) {
       window.localStorage.setItem('token', result.data.token)
