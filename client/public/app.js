@@ -1,62 +1,3 @@
-// const requests = {
-//   ololo: '',
-//   notes: {
-//     getNotes: function (order) {
-//       return window.fetch(`/api/notes?order=${order}`, {
-//         headers: {
-//           'Authorization': token
-//         }
-//       })
-//       .then(handleResponse)
-//     },
-//     dellAllNotes: function () {
-//       return window.fetch('/api/notes', {
-//         method: 'DELETE',
-//         headers: {
-//           'Authorization': token,
-//           'Content-Type': 'application/json'
-//         }
-//       })
-//         .then(handleResponse)
-//     },
-//     sendNote: function (text) {
-//       return window.fetch('/api/notes', {
-//         method: 'POST',
-//         headers: {
-//           'Authorization': token,
-//           'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({text})
-//       })
-//       .then(handleResponse)
-//     },
-//     deleteNote: function (id) {
-//       return window.fetch('/api/notes/' + id, {
-//         method: 'DELETE',
-//         headers: {
-//           'Authorization': token,
-//           'Content-Type': 'application/json'
-//         }
-//       })
-//       .then(handleResponse)
-//     },
-//     editNote: function (id, text) {
-//       return window.fetch('/api/notes/' + id, {
-//         method: 'PUT',
-//         headers: {
-//           'Authorization': token,
-//           'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({id, text})
-//       })
-//       .then(handleResponse)
-//     }
-//   },
-//   autorization: {
-//
-//   }
-// }
-
 import {notes as requests} from './requests.js'
 
 const token = window.localStorage.getItem('token')
@@ -105,7 +46,9 @@ document.getElementById('changeOrder').onclick = () => {
 }
 
 document.getElementById('sendNote').onclick = () => {
-  const text = document.getElementById('textNote').value
+  const note = document.getElementById('textNote')
+  const text = note.value
+  note.value = ''
 
   requests.sendNote(text)
   .then(result => {
