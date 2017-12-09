@@ -75,17 +75,26 @@ const users = {
   }
 }
 
-function errorHandler (nameMainDiv, errorResult) {
-  const messageDiv = document.getElementById(nameMainDiv)
-  const errorText = document.createElement('text')
-  const exitButton = document.createElement('button')
-  exitButton.innerHTML = 'x'
-  errorText.innerHTML = 'error. ' + errorResult.message
-  messageDiv.appendChild(errorText)
-  messageDiv.appendChild(exitButton)
-  exitButton.onclick = () => {
-    messageDiv.innerHTML = ''
+function errorHandler (errorResult) {
+  const errorDiv = document.createElement('div')
+  errorDiv.id = 'error'
+  errorDiv.className = 'message'
+  const errorCloseLink = document.createElement('a')
+  errorCloseLink.id = 'close'
+  errorCloseLink.title = 'close'
+  errorCloseLink.href = '#'
+  errorCloseLink.innerHTML = '&times;'
+  errorCloseLink.onclick = () => {
+    errorDiv.setAttribute('style', 'display: none')
   }
+  const errorSpan = document.createElement('span')
+  const errorSpanWarningNode = document.createTextNode('Error! ')
+  const errorSpanMessageNode = document.createTextNode(errorResult.message)
+  errorSpan.appendChild(errorSpanWarningNode)
+  errorDiv.appendChild(errorCloseLink)
+  errorDiv.appendChild(errorSpan)
+  errorDiv.appendChild(errorSpanMessageNode)
+  document.body.appendChild(errorDiv)
 }
 
 function handleResponse (res) {

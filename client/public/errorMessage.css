@@ -1,0 +1,91 @@
+/* шрифт */
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600&subset=latin,cyrillic);
+
+body, html {
+   width: 100%;
+   margin: 0px auto;
+   background: #e4e4e4;
+}
+
+/* базовый контейнер уведомлений */
+.message{
+    background-size: 40px 40px;
+    background-image: -moz-linear-gradient(135deg, rgba(255, 255, 255, .05) 25%, transparent 25%,
+    transparent 50%, rgba(255, 255, 255, .05) 50%, rgba(255, 255, 255, .05) 75%,
+    transparent 75%, transparent);
+    background-image: -webkit-linear-gradient(135deg, rgba(255, 255, 255, .05) 25%, transparent 25%,
+    transparent 50%, rgba(255, 255, 255, .05) 50%, rgba(255, 255, 255, .05) 75%,
+    transparent 75%, transparent);
+    background-image: linear-gradient(135deg, rgba(255, 255, 255, .05) 25%, transparent 25%,
+    transparent 50%, rgba(255, 255, 255, .05) 50%, rgba(255, 255, 255, .05) 75%,
+    transparent 75%, transparent);
+    box-shadow: 0 0 8px rgba(0,0,0,.3);
+    font:16px 'Open Sans';
+    width: 85%;
+    margin: 20px auto;
+    padding:15px;
+    -moz-animation: bg-animate 5s linear infinite;
+    -webkit-animation: bg-animate 5s linear infinite;
+    -ms-animation: bg-animate 5s linear infinite;
+    animation: bg-animate 5s linear infinite;
+}
+
+/* заголовок сообщения */
+.message span{font-weight:600;}
+
+/* кнопка закрытия */
+.message #close{float:right; color:inherit; text-decoration:none;}
+
+/* сообщение об ошибке */
+.message#error{
+    background-color:tomato;
+    border-left:7px #dc3d21 solid;
+    color:white;
+}
+
+/* предупреждение */
+.message#warning{
+    background-color: #eaaf51;
+    border-left:7px #df8b00 solid;
+    color:#6b6d31;
+}
+
+/* инфо-блок */
+.message#info{
+    background-color: #4ea5cd;
+    border-left:7px #3b8eb5 solid;
+    color:#beecfc;
+}
+/* успешное событие */
+.message#success{
+    background-color: #61b832;
+    border-left:7px #55a12c solid;
+    color:#296829;
+}
+/* анимация */
+@-webkit-keyframes bg-animate {
+    from {
+        background-position: 0 0;
+    }
+    to {
+       background-position: -80px 0;
+    }
+}
+
+@-moz-keyframes bg-animate {
+    from {
+        background-position: 0 0;
+    }
+    to {
+       background-position: -80px 0;
+    }
+}
+
+@keyframes bg-animate {
+    from {
+        background-position: 0 0;
+    }
+    to {
+       background-position: -80px 0;
+    }
+} 

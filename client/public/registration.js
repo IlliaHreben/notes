@@ -9,7 +9,7 @@ document.getElementById('registration').onclick = () => {
     window.alert('registration is successful')
     window.location.href = '/authorization'
   })
-  .catch(error => errorHandler('emptyDiv', error))
+  .catch(errorHandler)
 }
 
 document.getElementById('goToAuthorization').onclick = () => {
