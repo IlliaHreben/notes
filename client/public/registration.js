@@ -1,4 +1,4 @@
-import {users} from './requests.js'
+import {users, errorHandler} from './requests.js'
 
 document.getElementById('registration').onclick = () => {
   const email = document.getElementById('email').value
@@ -10,7 +10,7 @@ document.getElementById('registration').onclick = () => {
       window.alert('registration is successful')
       window.location.href = '/authorization'
     } else {
-      window.alert(result.error)
+      errorHandler('emptyDiv', result.error)
     }
   })
 }

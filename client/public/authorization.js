@@ -1,4 +1,4 @@
-import {users} from './requests.js'
+import {users, errorHandler} from './requests.js'
 
 document.getElementById('authorization').onclick = () => {
   const email = document.getElementById('email').value
@@ -18,7 +18,7 @@ document.getElementById('authorization').onclick = () => {
       window.alert('authorization is successful')
       window.location.href = `/`
     } else {
-      window.alert(result.error)
+      errorHandler('emptyDiv', result.error)
     }
   })
 }

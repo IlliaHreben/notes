@@ -77,6 +77,19 @@ const users = {
   }
 }
 
+function errorHandler (nameMainDiv, errorResult) {
+  const messageDiv = document.getElementById(nameMainDiv)
+  const errorText = document.createElement('text')
+  const exitButton = document.createElement('button')
+  exitButton.innerHTML = 'x'
+  errorText.innerHTML = 'error. ' + errorResult
+  messageDiv.appendChild(errorText)
+  messageDiv.appendChild(exitButton)
+  exitButton.onclick = () => {
+    messageDiv.innerHTML = ''
+  }
+}
+
 function handleResponse (res) {
   return res.text()
     .then(JSON.parse)
@@ -88,4 +101,4 @@ function handleResponse (res) {
     })
 }
 
-export {notes, users}
+export {notes, users, errorHandler}
