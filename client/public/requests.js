@@ -19,14 +19,14 @@ const notes = {
     })
       .then(handleResponse)
   },
-  sendNote: function (text) {
+  sendNote: function (noteData) {
     return window.fetch('/api/notes', {
       method: 'POST',
       headers: {
         'Authorization': token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({text})
+      body: JSON.stringify(noteData)
     })
     .then(handleResponse)
   },
@@ -40,14 +40,14 @@ const notes = {
     })
     .then(handleResponse)
   },
-  editNote: function (id, text) {
+  editNote: function (id, theme, text) {
     return window.fetch('/api/notes/' + id, {
       method: 'PUT',
       headers: {
         'Authorization': token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({id, text})
+      body: JSON.stringify({id, theme, text})
     })
     .then(handleResponse)
   }

@@ -1,14 +1,20 @@
 <html>
   <head>
     <title>authorization</title>
-    <link rel="stylesheet" href='/errorMessage.css'>
+    <link rel='stylesheet' href='/styles.css'>
   </head>
 
-  <body background='bg.jpg'>
-    <input id='email' type=text placeholder='your email'/>
-    <input id='password' type=password placeholder='your password'/>
-    <button id='authorization'>authorization</button>
-    <button id='goToRegistration'>registration</button>
+  <body>
+    <div class='supernotes'>
+      <p class='super'><img src='icon.png' class='icon'/>SUPER<span class='notes'>NOTES</span></p>
+    </div>
+    <div class='regdata'>
+    <input id='email' class='email' type=text placeholder='ENTER YOUR EMAIL'/>
+    <div><input id='password' class='password' type=password placeholder='ENTER YOUR PASSWORD'/></div>
+
+    <button id='authorization' class='button'>LOG IN</button>
+    <div class='goTo'>or <a href='#' id='goToRegistration'>registration</a></div>
+    </div>
     <script type='module' src='authorization.js'></script>
   </body>
 </html>

@@ -29,6 +29,7 @@ const notes = express.Router()
   .use(checkUser)
   .post('/', (req, res) => {
     resToClient(res, service.createNote({
+      theme: req.body.theme,
       text: req.body.text,
       userId: req.context.user._id
     }))
@@ -50,6 +51,7 @@ const notes = express.Router()
   .put('/:id', (req, res) => {
     resToClient(res, service.editNote({
       id: req.params.id,
+      theme: req.body.theme,
       text: req.body.text,
       userId: req.context.user._id
     }))

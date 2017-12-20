@@ -7,6 +7,8 @@ const secret = 'aaa'
 const bcrypt = require('bcryptjs')
 const saltRounds = 10
 
+const isValidEmail = require('is-valid-email')
+
 function getMongoUri () {
   if (process.env.MONGODB_URI) {
     return process.env.MONGODB_URI
@@ -20,13 +22,12 @@ function getMongoUri () {
 
 const connect = MongoClient.connect(getMongoUri())
 
-const isValidEmail = require('is-valid-email')
-
-const createNote = ({text, userId}) => connect
+const createNote = ({theme, text, userId}) => connect
   .then(db => {
     const notes = db.collection('notes')
     return notes.insert({
       userId,
+      theme,
       text,
       updatedAt: new Date()
     })
@@ -44,6 +45,7 @@ const getNotes = ({order, userId}) => {
     })
     .then(notes => notes.map(note => ({
       id: note._id,
+      theme: note.theme,
       text: note.text,
       updatedAt: note.updatedAt
     })))
@@ -65,7 +67,7 @@ const deleteNote = ({id, text, userId}) => {
     .then(() => undefined)
 }
 
-const editNote = ({id, text, userId}) => {
+const editNote = ({id, theme, text, userId}) => {
   const updatedAt = new Date()
   return connect
     .then(db => {
@@ -79,11 +81,12 @@ const editNote = ({id, text, userId}) => {
         })
         .then(() => notes.update(
           {_id: new ObjectID(id)},
-          {'$set': {text, updatedAt}}
+          {'$set': {theme, text, updatedAt}}
         ))
     })
     .then(() => ({
       id,
+      theme,
       text,
       updatedAt
     }))

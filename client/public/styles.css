@@ -1,0 +1,539 @@
+@font-face {
+ font-family: "VladivostokRegular";
+src: url("fonts/vladivostok/vladivostokBold/regular.eot");
+src: url("fonts/vladivostok/vladivostokRegular/regular.eot?#iefix") format("embedded-opentype"),
+url("fonts/vladivostok/vladivostokRegular/regular.woff") format("woff"),
+url("fonts/vladivostok/vladivostokRegular/regular.ttf") format("truetype");
+font-style: normal;
+font-weight: normal;
+}
+@font-face {
+ font-family: "VladivostokBold";
+src: url("fonts/vladivostok/vladivostokBold/bold.eot");
+src: url("fonts/vladivostok/vladivostokBold/bold.eot?#iefix") format("embedded-opentype"),
+url("fonts/vladivostok/vladivostokBold/bold.woff") format("woff"),
+url("fonts/vladivostok/vladivostokBold/bold.ttf") format("truetype");
+font-style: normal;
+font-weight: bold;
+}
+
+body, html {
+  font-family: "vladivostokRegular", Arial;
+  margin: 0px auto;
+  background-image: url(bg.png);
+}
+
+.supernotes {
+  font-family: "VladivostokBold";
+  margin: auto;
+  margin: 10px auto;
+  margin-top: 10%;
+  padding:15px;
+  cursor: default;
+}
+
+.icon {
+  color: rgb(71, 71, 71);
+  width: 62px;
+  height: 62px;
+}
+.notes {
+  color: rgb(84, 107, 122);
+  font-family: "VladivostokRegular";
+}
+.super {
+  font-family: "VladivostokBold";
+  font-size: 75px;
+  color: rgb(71, 71, 71);
+  margin: auto;
+  width: 555px;
+}
+
+.regdata {
+  width: 300px;
+  margin: auto;
+}
+
+input, textarea {
+  border: 1px solid #c1c1c1;
+  background: #f5f9fe !important;
+  font-size: 12px;
+  padding: 15;
+  outline: none;
+}
+
+.savedNoteTheme {
+  font-family: 'VladivostokBold';
+}
+
+.email, .password {
+  width: 300px;
+  height: 50px;
+}
+
+input[type='password'] {
+  padding: 13;
+  margin-top: 10px;
+  background-image:url('key.png');
+}
+
+input::placeholder, textarea::placeholder {
+  color: #b3b3b3;
+  font-weight: bold;
+  background-repeat:no-repeat;
+  background-attachment:scroll;
+  background-position:0 center;
+  padding-left:18px;
+}
+
+.email::placeholder {background-image:url('lock.png')}
+.password::placeholder {
+  background-image:url('key.png');
+  padding-left:20px;
+}
+
+#authorization, #registration {
+  width: 300px;
+  height: 50px;
+  background: #546b7a;
+  font-size: 20px;
+  margin-top: 10px;
+  border-radius: 0 0 15px 15px / 0 0 12px 12px;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 -5px #485b68 inset;
+  cursor: pointer;
+}
+#authorization:hover, #registration:hover {
+  background: #557386;
+  box-shadow: 0 5px #4a5f6c inset;
+}
+#authorization:active, #registration:active {
+  background: #728ea0;
+  box-shadow: 0 5px rgb(33,147,90) inset;
+}
+
+.goTo {
+  left: 50px;
+  font-size: 12px;
+  color: #474747;
+  /*font-weight: bold;*/
+  margin-top: 5px;
+}
+
+
+
+
+
+.smallLogo {
+  width: 363px;
+  position: fixed;
+  left: 27px;
+  top: 14px;
+  cursor: default;
+  transition: all 2s ease-out;
+  linear-gradient(45deg, red, blue);
+}
+
+.smallLogo:hover {
+  display: block;
+  animation: animLogo 3s;
+}
+
+.smallIcon {
+  color: rgb(71, 71, 71);
+  width: 40px;
+  height: 40px;
+  margin: -1px auto;
+}
+
+.smallSuper {
+  font-size: 50px;
+  color: rgb(71, 71, 71);
+  font-weight: bold;
+  margin: auto;
+}
+
+.smallNotes {
+  font-family: 'VladivostokRegular';
+}
+
+
+button {
+  font-family: "VladivostokRegular";
+  color: #474747;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+#exit {
+  width: 176px;
+  height: 48px;
+  background: #546b7a;
+  font-size: 20px;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 -5px #485b68 inset;
+  position: fixed;
+  top: 14px;
+  right: 27px;
+  margin-top: 10px;
+}
+#exit:hover {
+  background: #557386;
+  box-shadow: 0 5px #4a5f6c inset;
+}
+#exit:active {
+  background: #728ea0;
+  box-shadow: 0 5px #ce5151 inset;
+}
+
+
+#changeOrder {
+  width: 414px;
+  height: 64px;
+  background: #a2b6bf;
+  font-size: 18px;
+  transition: all 0.1s ease-in-out;
+  margin-top: 10px;
+  margin-left: 11px;
+}
+#changeOrder:hover {
+  background: #c3d9e3;
+}
+#changeOrder:active {
+  background: #82aabc;
+}
+
+#content {
+  width: 870px;
+  margin: auto;
+  margin-top: 116px;
+}
+
+#dellAllNotes {
+  width: 414px;
+  height: 64px;
+  background: #c0a0a0;
+  font-size: 18px;
+  transition: all 0.15s ease-in-out;
+  float: right;
+  margin: 10px 11px 9px 0px;
+}
+#dellAllNotes:hover {
+  background: #efcbcb;
+}
+#dellAllNotes:active {
+  background: #c69393;
+}
+
+#noteTheme {
+  width: 848px;
+  margin-top: 13px;
+  margin-left: 11px;
+}
+
+#textNote {
+  width: 848px;
+  height: 255px;
+  margin-top: 9px;
+  margin-left: 11px;
+  margin-bottom: 13px;
+}
+
+#sendNote {
+  display: flex;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  width: 310px;
+  height: 64px;
+  margin-top: 6px;
+  margin-bottom: 33px;
+  background: #ababab;
+  font-size: 18px;
+  transition: all 0.1s ease-in-out;
+}
+#sendNote:hover {
+  background: #d3d3d3;
+}
+#sendNote:active {
+  background: #6d6d6d;
+}
+
+#notesList {margin:auto;}
+
+.savedNoteTheme {
+  display: flex;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  width: 848px;
+  margin-top: 22px;
+}
+
+.savedNoteTheme:disabled {
+  border: none;
+  background: #e6e6e6 !important;
+}
+
+
+.savedNote {
+  display: flex;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  width: 848px;
+  margin-top: -1px;
+}
+
+.savedNote:disabled {
+  border: none;
+  background: #e6e6e6 !important;
+}
+
+.updatedAtContainer {
+  margin-left: auto;
+  margin-right: auto;
+  width: 848px;
+  height: 30px;
+  background: #e6e6e6;
+  font-size: 13px;
+  color: #b6b6b6;
+}
+
+.updatedAtTime {
+  margin-left: 15px;
+  margin-bottom: 15px;
+}
+
+.updatedAtDate {
+  float: right;
+  margin-right: 15px;
+}
+
+#textNote::placeholder {
+  background-image:url('textarea.png');
+  padding-left: 20px;
+  font-size: 14px;
+}
+
+#noteTheme::placeholder {
+  background-image:url('theme.png');
+  padding-left: 20px;
+}
+
+.menu {
+  padding: 0;
+  margin: 0;
+}
+
+
+
+
+
+/* базовый контейнер уведомлений */
+.message{
+    background-size: 40px 40px;
+    background-image: -moz-linear-gradient(135deg, rgba(255, 255, 255, .05) 25%, transparent 25%,
+    transparent 50%, rgba(255, 255, 255, .05) 50%, rgba(255, 255, 255, .05) 75%,
+    transparent 75%, transparent);
+    background-image: -webkit-linear-gradient(135deg, rgba(255, 255, 255, .05) 25%, transparent 25%,
+    transparent 50%, rgba(255, 255, 255, .05) 50%, rgba(255, 255, 255, .05) 75%,
+    transparent 75%, transparent);
+    background-image: linear-gradient(135deg, rgba(255, 255, 255, .05) 25%, transparent 25%,
+    transparent 50%, rgba(255, 255, 255, .05) 50%, rgba(255, 255, 255, .05) 75%,
+    transparent 75%, transparent);
+    box-shadow: 0 0 8px rgba(0,0,0,.3);
+    font:16px;
+    width: 20%;
+    margin: 50px auto;
+    padding:15px;
+    -moz-animation: bg-animate 5s linear infinite;
+    -webkit-animation: bg-animate 5s linear infinite;
+    -ms-animation: bg-animate 5s linear infinite;
+    animation: bg-animate 5s linear infinite;
+}
+
+/* заголовок сообщения */
+.message span{font-weight:600;}
+
+/* кнопка закрытия */
+.message #close{float:right; color:inherit; text-decoration:none;}
+
+/* сообщение об ошибке */
+.message#error{
+    background-color:tomato;
+    border-left:7px #dc3d21 solid;
+    color:white;
+}
+/* анимация */
+@-webkit-keyframes bg-animate {
+    from {
+        background-position: 0 0;
+    }
+    to {
+       background-position: -80px 0;
+    }
+}
+
+@-moz-keyframes bg-animate {
+    from {
+        background-position: 0 0;
+    }
+    to {
+       background-position: -80px 0;
+    }
+}
+
+@keyframes bg-animate {
+    from {
+        background-position: 0 0;
+    }
+    to {
+       background-position: -80px 0;
+    }
+}
+
+
+ul {
+    display: block;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+ul:after {
+    display: block;
+    content: ' ';
+    clear: both;
+    float: none;
+}
+
+ul.menu {
+  width: 848px;
+  margin-left: 11px;
+}
+
+ul.menu > li {
+  float: right;
+  left: 5%;
+  top: -120px;
+  width: 40px;
+    position: relative;
+}
+ul.menu > li > a {
+    display: block;
+    padding: 10px;
+    transition: all 0.7s ease-in-out;
+    width: 20px;
+    position: absolute;
+}
+
+ul.menu > li:hover {
+  background-color: #242424;
+}
+ul.menu > li > a:hover {
+  transform: rotate(1turn);
+}
+
+ul.submenu {
+    display: none;
+    position: absolute;
+    width: 120px;
+    top: 37px;
+    left: 0;
+    z-index: 1;
+}
+ul.submenu > li {
+    display: block;
+}
+ul.submenu > li > a {
+    display: block;
+    padding: 10px;
+    color: #e6e6e6;
+    background-color: #474747;
+    text-decoration: none;
+    transition: 0.2s ease-in-out all;
+    border-left: 10px solid #242424;
+    cursor: pointer;
+}
+ul.submenu > li > a:hover {
+  background-color: #242424;
+  padding: 10px 0px 10px 20px;
+}
+
+ul.submenu > li > a:hover ul.menu {
+  background-color: #474747;
+}
+
+ul.menu > li:hover > ul.submenu {
+    display: block;
+}
+
+@media (max-width: 1700px) {
+  #content {
+    margin-left: 27.5%;
+  }
+}
+@media (max-width: 1550px) {
+  .smallSuper {
+    font-size: 40px;
+  }
+  .smallIcon {
+    width: 33px;
+    height: 33px;
+  }
+  #content {
+    margin-left: 23%;
+  }
+}
+@media (max-width: 1400px) {
+  .smallSuper {
+    font-size: 50px;
+  }
+  .smallIcon {
+    width: 40px;
+    height: 40px;
+  }
+  .smallDisplay {
+    display: none;
+  }
+  #content {
+    margin-right: 21%;
+  }
+@media (max-width: 1400px) {
+  #content {
+    margin-left: auto;
+  }
+}
+@media (max-width: 1350px) {
+  #content {
+    margin-right: 19%;
+  }
+}
+@media (max-width: 1300px) {
+  #content {
+    margin-right: auto;
+  }
+  .smallLogo {
+    position: relative;
+    top: 5px;
+    left: 27px;
+  }
+  #exit {
+    position: relative;
+    float: right;
+    top: -54px;
+    right: 27px;
+  }
+  #content {
+    margin-top: 60px;
+  }
+  .smallDisplay {
+    display: inline;
+  }
+}
+
+@@keyframes animLogo {
+  from {-webkit-mask-image: -webkit-gradient(radial, 17 17, 0, 17 17, 0, from(rgb(0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0.2)), to(rgb(0, 0, 0)));}
+  to {-webkit-mask-image: -webkit-gradient(radial, 17 17, 123, 17 17, 138, from(rgb(0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0.2)), to(rgb(0, 0, 0)));}
+}

@@ -1,16 +1,28 @@
 <html>
   <head>
     <title>notes</title>
+    <link rel='stylesheet' href='/styles.css'>
   </head>
 
-  <body background='bg.jpg'>
-    <div id='email'></div>
-    <input id='textNote' type=text/>
-    <button id='sendNote'>create note</button>
-    <button id='dellAllNotes'>delete all</button>
-    <button id='changeOrder'>change order</button>
-    <button id='exit'>exit</button>
-    <div id='notesList'/>
+  <body>
+    <!-- <static> -->
+    <div class='smallLogo'>
+      <p id='smallSuper' class='smallSuper'>
+        <img src='icon.png' id='smallIcon' class='smallIcon'/>S<span class='smallDisplay'>UPER</span><span class='notes' id='smallNotes'>N<span class='smallDisplay'>OTES</span></span>
+      </p>
+    </div>
+    <button id='exit' class='button'>EXIT</button>
+
+    <!-- <dynamic> -->
+    <div id='content'>
+      <button id='changeOrder' class='button'>CHANGE ORDER</button>
+      <button id='dellAllNotes' class='button'>DELETE ALL</button>
+      <input type='text' id='noteTheme' placeholder='ENTER YOURE THEME OF NOTE'></input>
+      <textarea id='textNote' type=text placeholder='ENTER YOURE TEXT OF NOTE'></textarea>
+      <button id='sendNote' class='button'>CREATE NOTE</button>
+      <div id='notesList'/>
+    </div>
+
     <script type='module' src='app.js'></script>
     <script>
       window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;

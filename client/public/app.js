@@ -46,13 +46,28 @@ document.getElementById('changeOrder').onclick = () => {
 }
 
 document.getElementById('sendNote').onclick = () => {
-  const note = document.getElementById('textNote')
-  const text = note.value
-  note.value = ''
+  const note = {
+    themeInput: document.getElementById('noteTheme'),
+    textInput: document.getElementById('textNote')
+  }
+  const noteData = {
+    theme: note.themeInput.value,
+    text: note.textInput.value
+  }
+  if (noteData.theme === '') {
+    noteData.theme = '[WITHOUT TITLE]'
+  }
+  note.themeInput.value = ''
+  note.textInput.value = ''
 
-  requests.sendNote(text)
+  requests.sendNote(noteData)
   .then(result => {
-    const newDiv = createNoteDiv({id: result.id, text, updatedAt: result.updatedAt})
+    const newDiv = createNoteDiv({
+      id: result.id,
+      theme: noteData.theme,
+      text: noteData.text,
+      updatedAt: result.updatedAt
+    })
     if (getOrder() === -1) {
       notesList.insertBefore(newDiv, notesList.firstChild)
     } else {
@@ -63,25 +78,77 @@ document.getElementById('sendNote').onclick = () => {
 
 const createNoteDiv = (note) => {
   const noteDiv = document.createElement('div')
+
+  const noteTextBoxTheme = document.createElement('input')
+  noteTextBoxTheme.type = 'text'
+  noteTextBoxTheme.className = 'savedNoteTheme'
+  noteTextBoxTheme.value = note.theme
+  noteDiv.appendChild(noteTextBoxTheme)
+
   const noteTextBox = document.createElement('input')
   noteTextBox.type = 'text'
-  const editButton = document.createElement('button')
-  const deleteButton = document.createElement('button')
-  const updatedAt = document.createElement('text')
-
-  noteDiv.appendChild(noteTextBox)
-  noteDiv.appendChild(editButton)
-  noteDiv.appendChild(deleteButton)
-  noteDiv.appendChild(updatedAt)
-  updatedAt.innerHTML = 'Last upd: ' + formatDate(note.updatedAt)
-
+  noteTextBox.className = 'savedNote'
   noteTextBox.value = note.text
+  noteDiv.appendChild(noteTextBox)
+
+  const updatedAtContainer = document.createElement('div')
+  updatedAtContainer.className = 'updatedAtContainer'
+  const updatedAtTime = document.createElement('text')
+  updatedAtTime.className = 'updatedAtTime'
+  updatedAtContainer.appendChild(updatedAtTime)
+  noteDiv.appendChild(updatedAtContainer)
+
+  const updatedAtDate = document.createElement('text')
+  updatedAtDate.className = 'updatedAtDate'
+  updatedAtContainer.appendChild(updatedAtDate)
+  noteDiv.appendChild(updatedAtContainer)
+
+  const dateAndTimeArr = formatDate(note.updatedAt).toUpperCase().split(', ')
+  updatedAtTime.innerHTML = dateAndTimeArr[0]
+  updatedAtDate.innerHTML = dateAndTimeArr[1]
+
+  // editMenu
+  const editMenu = document.createElement('ul')
+  editMenu.className = 'menu'
+
+  const editButton = document.createElement('a')
+  editButton.className = 'editButton'
+  const editButtonContainer = document.createElement('li')
+  editButtonContainer.appendChild(editButton)
+
+  const deleteButton = document.createElement('a')
+  deleteButton.className = 'deleteButton'
+  const deleteButtonContainer = document.createElement('li') //         [noteDiv]
+  deleteButtonContainer.appendChild(deleteButton) //                    [editMenu]
+  //                                                                   [menuChild]
+  const iconSettings = document.createElement('img') //                 /        \
+  iconSettings.setAttribute('src', '/settings_icon.png') //   [iconSettings]  [buttonsContainer]
+  const iconSettingsContainer = document.createElement('a')//                  /              \
+  iconSettingsContainer.setAttribute('href', '#') //            [editButtonContainer]    [deleteButtonContainer]
+  iconSettingsContainer.appendChild(iconSettings) //                 [editButton]             [deleteButton]
+
+  const buttonsContainer = document.createElement('ul')
+  buttonsContainer.className = 'submenu'
+
+  buttonsContainer.appendChild(editButtonContainer)
+  buttonsContainer.appendChild(deleteButtonContainer)
+
+  const menuChild = document.createElement('li')
+  menuChild.appendChild(iconSettingsContainer)
+  menuChild.appendChild(buttonsContainer)
+
+  editMenu.appendChild(menuChild)
+
+  noteDiv.appendChild(editMenu)
+  // editMenu
 
   setButtonToSave()
 
   function setButtonToSave () {
-    editButton.innerHTML = 'edit'
+    editButton.innerHTML = 'EDIT'
     noteTextBox.disabled = true
+    noteTextBoxTheme.disabled = true
+    updatedAtContainer.style.visibility = 'visible'
     editButton.onclick = () => {
       handleNoteEdit()
     }
@@ -89,21 +156,25 @@ const createNoteDiv = (note) => {
 
   function handleNoteSave () {
     setButtonToSave()
-    requests.editNote(note.id, noteTextBox.value)
+    requests.editNote(note.id, noteTextBoxTheme.value, noteTextBox.value)
       .then(updatedNote => {
-        updatedAt.innerHTML = 'Last upd: ' + formatDate(updatedNote.updatedAt)
+        const dateAndTimeArr = formatDate(updatedNote.updatedAt).toUpperCase().split(', ')
+        updatedAtTime.innerHTML = dateAndTimeArr[0]
+        updatedAtDate.innerHTML = dateAndTimeArr[1]
       })
   }
 
   function handleNoteEdit () {
-    editButton.innerHTML = 'save'
+    editButton.innerHTML = 'SAVE'
     noteTextBox.disabled = false
+    noteTextBoxTheme.disabled = false
+    updatedAtContainer.style.visibility = 'hidden'
     editButton.onclick = () => {
       handleNoteSave()
     }
   }
 
-  deleteButton.innerHTML = 'x'
+  deleteButton.innerHTML = 'DELETE'
   deleteButton.onclick = () => {
     requests.deleteNote(note.id)
     .then(() => noteDiv.remove())
