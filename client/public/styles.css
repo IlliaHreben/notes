@@ -418,7 +418,7 @@ ul.menu > li {
   left: 5%;
   top: -120px;
   width: 40px;
-    position: relative;
+  position: relative;
 }
 ul.menu > li > a {
     display: block;
@@ -531,9 +531,4 @@ ul.menu > li:hover > ul.submenu {
   .smallDisplay {
     display: inline;
   }
-}
-
-@@keyframes animLogo {
-  from {-webkit-mask-image: -webkit-gradient(radial, 17 17, 0, 17 17, 0, from(rgb(0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0.2)), to(rgb(0, 0, 0)));}
-  to {-webkit-mask-image: -webkit-gradient(radial, 17 17, 123, 17 17, 138, from(rgb(0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0.2)), to(rgb(0, 0, 0)));}
 }

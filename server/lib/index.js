@@ -70,9 +70,13 @@ const api = express.Router()
   .post('/authorization', (req, res) => {
     resToClient(res, service.authUser(req.body))
   })
+  .get('/registration/confirm', checkUser, (req, res) => {
+    service.confirmUser(req.context)
+      .then(() => res.redirect('/authorization'))
+  })
 
 function checkUser (req, res, next) {
-  service.checkUser(req.headers.authorization)
+  service.checkUser(req.headers.authorization || req.query.authorization)
     .then(user => {
       req.context = {user}
       next()

@@ -6,7 +6,6 @@ document.getElementById('registration').onclick = () => {
 
   users.registration(email, password)
   .then(data => {
-    window.alert('registration is successful')
     window.location.href = '/authorization'
   })
   .catch(errorHandler)

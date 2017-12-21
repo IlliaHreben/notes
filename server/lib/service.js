@@ -60,7 +60,7 @@ const deleteNote = ({id, text, userId}) => {
           if (note.userId.equals(userId)) {
             return
           }
-          throw new ServiceError('cannot delete note', 'WRONG_ID')
+          throw new ServiceError('Cannot delete note.', 'WRONG_ID')
         })
         .then(() => notes.deleteOne({_id: new ObjectID(id)}))
     })
@@ -77,7 +77,7 @@ const editNote = ({id, theme, text, userId}) => {
           if (note.userId.equals(userId)) {
             return
           }
-          throw new ServiceError('cannot edit note', 'WRONG_ID')
+          throw new ServiceError('Cannot edit note.', 'WRONG_ID')
         })
         .then(() => notes.update(
           {_id: new ObjectID(id)},
@@ -101,15 +101,29 @@ const createUser = (regData) => {
       return users.findOne({email: regData.email})
         .then(user => {
           if (user) {
-            throw new ServiceError('a user with this email already exists', 'NOT_UNIQUE')
+            throw new ServiceError('A user with this email already exists.', 'NOT_UNIQUE')
           }
           return bcrypt.hash(regData.password, saltRounds)
         })
-        .then(hash => {
-          users.insert({email: regData.email, password: hash})
-        })
+        .then(hash => users.insert({email: regData.email, password: hash, status: 'PENDING'}))
     })
-    .then(() => undefined)
+    .then(user => {
+      const token = jwt.encode({userId: user.ops[0]._id}, secret)
+      const domain = process.env.DOMAIN || 'http://localhost:3000'
+      const registrationLink = domain + `/api/registration/confirm/?authorization=${token}`
+      console.log(registrationLink)
+    })
+}
+
+const confirmUser = ({user}) => {
+  return connect
+    .then(db => {
+      const users = db.collection('users')
+      return users.update(
+        {_id: user._id},
+        {'$set': {status: 'ACTIVE'}}
+      )
+    })
 }
 
 function isEmailValid (email) {
@@ -125,11 +139,13 @@ const authUser = ({email, password}) => connect
   })
   .then(user => {
     if (!user) {
-      throw new ServiceError('email was not found', 'WRONG_EMAIL')
+      throw new ServiceError('Email was not found.', 'WRONG_EMAIL')
+    } else if (user.status === 'PENDING') {
+      throw new ServiceError('Account was not confirmed.', 'UNCONFIRMED_ACCOUNT')
     }
     return bcrypt.compare(password, user.password).then(res => {
       if (!res) {
-        throw new ServiceError('wrong password', 'WRONG_PASS')
+        throw new ServiceError('Wrong password.', 'WRONG_PASS')
       }
       return {token: jwt.encode({userId: user._id}, secret)}
     })
@@ -153,8 +169,8 @@ function checkUser (token) {
       if (user) {
         return user
       }
-      throw new ServiceError('invalid user id', 'WRONG_ID')
+      throw new ServiceError('Invalid user id.', 'WRONG_ID')
     })
 }
 
-module.exports = {createNote, getNotes, deleteNote, editNote, createUser, authUser, checkUser, dellAllNotes}
+module.exports = {createNote, getNotes, deleteNote, editNote, createUser, authUser, checkUser, dellAllNotes, confirmUser}
