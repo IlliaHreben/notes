@@ -3,6 +3,7 @@ const serveStatic = require('serve-static')
 const bodyParser = require('body-parser')
 const service = require('./service')
 const ServiceError = require('./ServiceError')
+const config = require('./config')
 
 const resToClient = (res, promise) => {
   promise
@@ -85,4 +86,4 @@ function checkUser (req, res, next) {
 
 app.use('/api', api)
 
-app.listen(process.env.PORT || '3000')
+app.listen(config.port)

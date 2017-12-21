@@ -1,6 +1,8 @@
 const ServiceError = require('./ServiceError')
 const {MongoClient, ObjectID} = require('mongodb')
 
+const config = require('./config')
+
 const jwt = require('jwt-simple')
 const secret = 'aaa'
 
@@ -9,18 +11,7 @@ const saltRounds = 10
 
 const isValidEmail = require('is-valid-email')
 
-function getMongoUri () {
-  if (process.env.MONGODB_URI) {
-    return process.env.MONGODB_URI
-  }
-
-  const host = process.env.MONGO_HOST || 'localhost'
-  const port = process.env.MONGO_PORT || '27017'
-  const dbName = process.env.MONGO_DB_NAME || 'notes'
-  return `mongodb://${host}:${port}/${dbName}`
-}
-
-const connect = MongoClient.connect(getMongoUri())
+const connect = MongoClient.connect(config.mongoUri)
 
 const createNote = ({theme, text, userId}) => connect
   .then(db => {
@@ -109,8 +100,7 @@ const createUser = (regData) => {
     })
     .then(user => {
       const token = jwt.encode({userId: user.ops[0]._id}, secret)
-      const domain = process.env.DOMAIN || 'http://localhost:3000'
-      const registrationLink = domain + `/api/registration/confirm/?authorization=${token}`
+      const registrationLink = config.domain + `/api/registration/confirm/?authorization=${token}`
       console.log(registrationLink)
     })
 }
