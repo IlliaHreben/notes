@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      MONGO_HOST: mongo
+      MONGODB_URI: mongodb://mongo:27017/notes
     ports:
       - 3000:3000
     depends_on:

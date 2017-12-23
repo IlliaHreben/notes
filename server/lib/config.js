@@ -1,18 +1,14 @@
-function getMongoUri () {
-  if (process.env.MONGODB_URI) {
-    return process.env.MONGODB_URI
-  }
-
-  const host = process.env.MONGO_HOST || 'localhost'
-  const port = process.env.MONGO_PORT || '27017'
-  const dbName = process.env.MONGO_DB_NAME || 'notes'
-  return `mongodb://${host}:${port}/${dbName}`
-}
-
-const mongoUri = getMongoUri()
+const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/notes'
 
 const port = process.env.PORT || '3000'
 
 const domain = process.env.DOMAIN || `http://localhost:${port}`
 
-module.exports = {mongoUri, domain, port}
+const emailFrom = process.env.EMAIL_FROM
+
+const secret = process.env.SECRET
+
+const emailApiKey = process.env.MAILGUN_API_KEY
+const emailDomain = process.env.MAILGUN_DOMAIN
+
+module.exports = {mongoUri, domain, port, emailFrom, secret, emailApiKey, emailDomain}
