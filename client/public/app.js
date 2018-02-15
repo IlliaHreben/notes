@@ -122,7 +122,7 @@ const createNoteDiv = (note) => {
   deleteButtonContainer.appendChild(deleteButton) //                    [editMenu]
   //                                                                   [menuChild]
   const iconSettings = document.createElement('img') //                 /        \
-  iconSettings.setAttribute('src', '/settings_icon.png') //   [iconSettings]  [buttonsContainer]
+  iconSettings.setAttribute('src', '/pictures/settings_icon.png') //   [iconSettings]  [buttonsContainer]
   const iconSettingsContainer = document.createElement('a')//                  /              \
   iconSettingsContainer.setAttribute('href', '#') //            [editButtonContainer]    [deleteButtonContainer]
   iconSettingsContainer.appendChild(iconSettings) //                 [editButton]             [deleteButton]

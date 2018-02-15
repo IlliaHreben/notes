@@ -17,10 +17,10 @@ font-style: normal;
 font-weight: bold;
 }
 
-body, html {
+html {
   font-family: "vladivostokRegular", Arial;
   margin: 0px auto;
-  background-image: url(bg.png);
+  background-image: url(pictures/bg.png);
 }
 
 .supernotes {
@@ -35,7 +35,8 @@ body, html {
 .icon {
   color: rgb(71, 71, 71);
   width: 62px;
-  height: 62px;
+  height: 60px;
+  margin-bottom: -2;
 }
 .notes {
   color: rgb(84, 107, 122);
@@ -74,7 +75,7 @@ input, textarea {
 input[type='password'] {
   padding: 13;
   margin-top: 10px;
-  background-image:url('key.png');
+  background-image:url('pictures/key.png');
 }
 
 input::placeholder, textarea::placeholder {
@@ -86,9 +87,9 @@ input::placeholder, textarea::placeholder {
   padding-left:18px;
 }
 
-.email::placeholder {background-image:url('lock.png')}
+.email::placeholder {background-image:url('pictures/lock.png')}
 .password::placeholder {
-  background-image:url('key.png');
+  background-image:url('pictures/key.png');
   padding-left:20px;
 }
 
@@ -312,13 +313,13 @@ button {
 }
 
 #textNote::placeholder {
-  background-image:url('textarea.png');
+  background-image:url('pictures/textarea.png');
   padding-left: 20px;
   font-size: 14px;
 }
 
 #noteTheme::placeholder {
-  background-image:url('theme.png');
+  background-image:url('pictures/theme.png');
   padding-left: 20px;
 }
 
