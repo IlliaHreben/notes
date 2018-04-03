@@ -1,6 +1,14 @@
 const token = window.localStorage.getItem('token')
 
 const notes = {
+  getAvatar: function () {
+    return window.fetch(`/api/notes/avatar`, {
+      headers: {
+        'Authorization': token
+      }
+    })
+    .then(handleResponse)
+  },
   getNotes: function (order) {
     return window.fetch(`/api/notes?order=${order}`, {
       headers: {

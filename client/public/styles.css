@@ -470,6 +470,16 @@ ul.menu > li:hover > ul.submenu {
     display: block;
 }
 
+
+.globalSettingsIcons {
+  position: relative;
+  float: right;
+  top: -77px;
+  right: 240px;
+}
+
+
+
 @media (max-width: 1700px) {
   #content {
     margin-left: 27.5%;

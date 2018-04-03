@@ -6,6 +6,7 @@ const saltRounds = 10
 const jwt = require('jwt-simple')
 const {promisify} = require('util')
 const isValidEmail = require('is-valid-email')
+const gravatar = require('gravatar-api')
 
 const mailgun = require('nodemailer-mailgun-transport')
 const nodemailer = require('nodemailer')
@@ -33,7 +34,15 @@ const createUser = (regData) => {
           }
           return bcrypt.hash(regData.password, saltRounds)
         })
-        .then(hash => users.insert({email: regData.email, password: hash, status: 'PENDING'}))
+        .then(hash => users.insert({
+          email: regData.email,
+          password: hash,
+          gravatarUrl: gravatar.imageUrl({
+            email: regData.email,
+            parameters: {'size': '100'}
+          }),
+          status: 'PENDING'
+        }))
     })
     .then(user => {
       const token = jwt.encode({userId: user.ops[0]._id}, secret)

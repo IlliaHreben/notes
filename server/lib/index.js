@@ -13,6 +13,7 @@ const deleteNote = require('./services/deleteNote')
 const dellAllNotes = require('./services/dellAllNotes')
 const editNote = require('./services/editNote')
 const getNotes = require('./services/getNotes')
+const getAvatar = require('./services/getAvatar')
 
 const resToClient = (res, promise) => {
   promise
@@ -50,6 +51,10 @@ const notes = express.Router()
       userId: req.context.user._id
     }
     resToClient(res, getNotes(params))
+  })
+  .get('/avatar', (req, res) => {
+    const params = {userId: req.context.user._id}
+    resToClient(res, getAvatar(params))
   })
   .delete('/:id', (req, res) => {
     resToClient(res, deleteNote({

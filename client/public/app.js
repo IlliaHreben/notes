@@ -11,6 +11,14 @@ function getOrder () {
   return Number.parseInt(window.localStorage.getItem('sortOrder') || '-1') // оптимизировать
 }
 
+requests.getAvatar().then(avatarUrl => {
+  document.getElementById('gravatarImage').src = avatarUrl
+})
+  .catch(error => {
+    console.log(error)
+    document.getElementById('gravatarImage').src = '/pictures/avatar.png'
+  })
+
 function renderNotes (order) {
   requests.getNotes(order).then(sortedNotes => {
     sortedNotes.forEach(note => {
@@ -43,6 +51,37 @@ const notesList = document.getElementById('notesList')
 document.getElementById('changeOrder').onclick = () => {
   notesList.innerHTML = ''
   renderNotes(toggleOrder())
+}
+
+document.getElementById('globalSettingsIcons').onclick = () => {
+  // const note = {
+  //   themeInput: document.getElementById('noteTheme'),
+  //   textInput: document.getElementById('textNote')
+  // }
+  // const noteData = {
+  //   theme: note.themeInput.value,
+  //   text: note.textInput.value
+  // }
+  // if (noteData.theme === '') {
+  //   noteData.theme = '[WITHOUT TITLE]'
+  // }
+  // note.themeInput.value = ''
+  // note.textInput.value = ''
+  //
+  // requests.sendNote(noteData)
+  // .then(result => {
+  //   const newDiv = createNoteDiv({
+  //     id: result.id,
+  //     theme: noteData.theme,
+  //     text: noteData.text,
+  //     updatedAt: result.updatedAt
+  //   })
+  //   if (getOrder() === -1) {
+  //     notesList.insertBefore(newDiv, notesList.firstChild)
+  //   } else {
+  //     notesList.appendChild(newDiv)
+  //   }
+  // })
 }
 
 document.getElementById('sendNote').onclick = () => {
