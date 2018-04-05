@@ -13,7 +13,7 @@ const deleteNote = require('./services/deleteNote')
 const dellAllNotes = require('./services/dellAllNotes')
 const editNote = require('./services/editNote')
 const getNotes = require('./services/getNotes')
-const getAvatar = require('./services/getAvatar')
+const getUser = require('./services/getUser')
 
 const resToClient = (res, promise) => {
   promise
@@ -52,10 +52,6 @@ const notes = express.Router()
     }
     resToClient(res, getNotes(params))
   })
-  .get('/avatar', (req, res) => {
-    const params = {userId: req.context.user._id}
-    resToClient(res, getAvatar(params))
-  })
   .delete('/:id', (req, res) => {
     resToClient(res, deleteNote({
       id: req.params.id,
@@ -88,6 +84,9 @@ const api = express.Router()
   .get('/registration/confirm', checkUser, (req, res) => {
     confirmUser(req.context)
       .then(() => res.redirect('/authorization'))
+  })
+  .get('/user', checkUser, (req, res) => {
+    resToClient(res, getUser(req.context))
   })
 
 function checkUser (req, res, next) {

@@ -179,6 +179,24 @@ button {
   right: 27px;
   margin-top: 10px;
 }
+
+#avatarImage {
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 -5px #485b68 inset;
+  position: fixed;
+  top: 14px;
+  right: 227px;
+  margin-top: 10px;
+}
+
+#email {
+  transition: all 0.2s ease-in-out;
+  position: fixed;
+  top: 24px;
+  right: 300px;
+  margin-top: 10px;
+}
+
 #exit:hover {
   background: #557386;
   box-shadow: 0 5px #4a5f6c inset;

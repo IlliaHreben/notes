@@ -1,4 +1,4 @@
-import {notes as requests} from './requests.js'
+import {notes, users} from './requests.js'
 
 const token = window.localStorage.getItem('token')
 if (!token) {
@@ -11,16 +11,16 @@ function getOrder () {
   return Number.parseInt(window.localStorage.getItem('sortOrder') || '-1') // оптимизировать
 }
 
-requests.getAvatar().then(avatarUrl => {
-  document.getElementById('gravatarImage').src = avatarUrl
+users.getUser().then(data => {
+  document.getElementById('avatarImage').src = data.avatarUrl
+  document.getElementById('avatarImage').onclick = () => {
+    window.location.replace('https://ru.gravatar.com/' + data.email.split('@')[0])
+  }
+  document.getElementById('email').innerHTML = data.email
 })
-  .catch(error => {
-    console.log(error)
-    document.getElementById('gravatarImage').src = '/pictures/avatar.png'
-  })
 
 function renderNotes (order) {
-  requests.getNotes(order).then(sortedNotes => {
+  notes.getNotes(order).then(sortedNotes => {
     sortedNotes.forEach(note => {
       const newDiv = createNoteDiv(note)
       notesList.appendChild(newDiv)
@@ -41,7 +41,7 @@ document.getElementById('exit').onclick = () => {
 }
 
 document.getElementById('dellAllNotes').onclick = () => {
-  requests.dellAllNotes()
+  notes.dellAllNotes()
   .then(() => {
     notesList.innerHTML = ''
   })
@@ -53,7 +53,7 @@ document.getElementById('changeOrder').onclick = () => {
   renderNotes(toggleOrder())
 }
 
-document.getElementById('globalSettingsIcons').onclick = () => {
+// document.getElementById('globalSettingsIcons').onclick = () => {
   // const note = {
   //   themeInput: document.getElementById('noteTheme'),
   //   textInput: document.getElementById('textNote')
@@ -68,7 +68,7 @@ document.getElementById('globalSettingsIcons').onclick = () => {
   // note.themeInput.value = ''
   // note.textInput.value = ''
   //
-  // requests.sendNote(noteData)
+  // notes.sendNote(noteData)
   // .then(result => {
   //   const newDiv = createNoteDiv({
   //     id: result.id,
@@ -82,7 +82,7 @@ document.getElementById('globalSettingsIcons').onclick = () => {
   //     notesList.appendChild(newDiv)
   //   }
   // })
-}
+// }
 
 document.getElementById('sendNote').onclick = () => {
   const note = {
@@ -99,7 +99,7 @@ document.getElementById('sendNote').onclick = () => {
   note.themeInput.value = ''
   note.textInput.value = ''
 
-  requests.sendNote(noteData)
+  notes.sendNote(noteData)
   .then(result => {
     const newDiv = createNoteDiv({
       id: result.id,
@@ -195,7 +195,7 @@ const createNoteDiv = (note) => {
 
   function handleNoteSave () {
     setButtonToSave()
-    requests.editNote(note.id, noteTextBoxTheme.value, noteTextBox.value)
+    notes.editNote(note.id, noteTextBoxTheme.value, noteTextBox.value)
       .then(updatedNote => {
         const dateAndTimeArr = formatDate(updatedNote.updatedAt).toUpperCase().split(', ')
         updatedAtTime.innerHTML = dateAndTimeArr[0]
@@ -215,7 +215,7 @@ const createNoteDiv = (note) => {
 
   deleteButton.innerHTML = 'DELETE'
   deleteButton.onclick = () => {
-    requests.deleteNote(note.id)
+    notes.deleteNote(note.id)
     .then(() => noteDiv.remove())
   }
   return noteDiv
