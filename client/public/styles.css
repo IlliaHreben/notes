@@ -189,7 +189,7 @@ button {
   margin-top: 10px;
 }
 
-#email {
+#UserEmail {
   transition: all 0.2s ease-in-out;
   position: fixed;
   top: 24px;
@@ -344,6 +344,69 @@ button {
 .menu {
   padding: 0;
   margin: 0;
+}
+
+/* Уведомление о пустых полях в заметке */
+.notifEmptyNote {
+ width: 380px;
+ position: relative;
+ margin: 0 auto 25px auto;
+ padding: 30px 20px;
+ text-align: left;
+ border-radius: 5px;
+ opacity: 0;
+ -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+ filter: alpha(opacity=0);
+ cursor: default;
+ background: #F89406;
+ display: block;
+ -webkit-animation: fadeOut 3s linear forwards;
+ -moz-animation: fadeOut 3s linear forwards;
+ -o-animation: fadeOut 3s linear forwards;
+ -ms-animation: fadeOut 3s linear forwards;
+ animation: fadeOut 3s linear forwards;
+ -webkit-animation: runProgress 2s linear forwards 0.7s;
+ -moz-animation: runProgress 2s linear forwards 0.7s;
+ -o-animation: runProgress 2s linear forwards 0.7s;
+ -ms-animation: runProgress 2s linear forwards 0.7s;
+ animation: runProgress 2s linear forwards 0.7s;
+}
+
+.notifEmptyNote p {
+ text-align: left;
+ font-weight: bold;
+ font-size: 16px;
+ margin: 0;
+ color: #FFF;
+}
+
+.notifEmptyNote p:before {
+ text-align: center;
+ border: 3px solid rgba(255, 255, 255, 1);
+ margin-top: -18px;
+ top: 50%;
+ right: 25px;
+ width: 30px;
+ content: '!';
+ font-size: 30px;
+ color: rgba(255, 255, 255, 1);
+ position: absolute;
+ height: 30px;
+ line-height: 30px;
+ border-radius: 50%;
+}
+
+fadeOut {
+ 0% { opacity: 0; }
+ 10% { opacity: 1; }
+ 90% { opacity: 1; -webkit-transform: translateY(0px);}
+ 99% { opacity: 0; -webkit-transform: translateY(-25px);}
+ 100% { opacity: 0; }
+}
+
+runProgress {
+ 0%{ width: 0%; }
+ 100%{ width: 94%; }
 }
 
 

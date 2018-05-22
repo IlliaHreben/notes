@@ -1,8 +1,7 @@
 const ServiceError = require('../ServiceError')
 const {ObjectID} = require('mongodb')
-const connect = require('../model')
 
-const editNote = ({id, theme, text, userId}) => {
+const editNote = ({id, theme, text, userId}, connect) => {
   const updatedAt = new Date()
   return connect
     .then(db => {

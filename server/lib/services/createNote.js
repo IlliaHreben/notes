@@ -1,6 +1,4 @@
-const connect = require('../model')
-
-const createNote = ({theme, text, userId}) => connect
+const createNote = ({theme, text, userId}, connect) => connect
   .then(db => {
     const notes = db.collection('notes')
     return notes.insert({

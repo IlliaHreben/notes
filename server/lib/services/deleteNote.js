@@ -1,8 +1,7 @@
 const ServiceError = require('../ServiceError')
 const {ObjectID} = require('mongodb')
-const connect = require('../model')
 
-const deleteNote = ({id, text, userId}) => {
+const deleteNote = ({id, text, userId}, connect) => {
   return connect
     .then(db => {
       const notes = db.collection('notes')

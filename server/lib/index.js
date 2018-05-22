@@ -14,6 +14,7 @@ const dellAllNotes = require('./services/dellAllNotes')
 const editNote = require('./services/editNote')
 const getNotes = require('./services/getNotes')
 const getUser = require('./services/getUser')
+const connect = require('./model')
 
 const resToClient = (res, promise) => {
   promise
@@ -43,21 +44,21 @@ const notes = express.Router()
       theme: req.body.theme,
       text: req.body.text,
       userId: req.context.user._id
-    }))
+    }, connect))
   })
   .get('/', (req, res) => {
     const params = {
       order: Number.parseInt(req.query.order),
       userId: req.context.user._id
     }
-    resToClient(res, getNotes(params))
+    resToClient(res, getNotes(params, connect))
   })
   .delete('/:id', (req, res) => {
     resToClient(res, deleteNote({
       id: req.params.id,
       text: req.params.text,
       userId: req.context.user._id
-    }))
+    }, connect))
   })
   .put('/:id', (req, res) => {
     resToClient(res, editNote({
@@ -65,24 +66,24 @@ const notes = express.Router()
       theme: req.body.theme,
       text: req.body.text,
       userId: req.context.user._id
-    }))
+    }, connect))
   })
   .delete('/', (req, res) => {
     resToClient(res, dellAllNotes({
       userId: req.context.user._id
-    }))
+    }, connect))
   })
 
 const api = express.Router()
   .use('/notes', notes)
   .post('/registration', (req, res) => {
-    resToClient(res, createUser(req.body))
+    resToClient(res, createUser(req.body, connect))
   })
   .post('/authorization', (req, res) => {
-    resToClient(res, authUser(req.body))
+    resToClient(res, authUser(req.body, connect))
   })
   .get('/registration/confirm', checkUser, (req, res) => {
-    confirmUser(req.context)
+    confirmUser(req.context, connect)
       .then(() => res.redirect('/authorization'))
   })
   .get('/user', checkUser, (req, res) => {

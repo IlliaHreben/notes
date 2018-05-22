@@ -1,6 +1,4 @@
-const connect = require('../model')
-
-const dellAllNotes = ({userId}) => {
+const dellAllNotes = ({userId}, connect) => {
   return connect
     .then(db => {
       const notes = db.collection('notes')

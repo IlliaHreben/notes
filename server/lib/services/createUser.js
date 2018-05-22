@@ -36,7 +36,7 @@ const createUser = (regData) => {
         .then(hash => users.insert({
           email: regData.email,
           password: hash,
-          status: 'ACTIVE'
+          status: 'PENDING'
         }))
     })
     .then(user => {

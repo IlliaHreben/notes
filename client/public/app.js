@@ -1,4 +1,4 @@
-import {notes, users} from './requests.js'
+import {notes, users, errorHandler} from './requests.js'
 
 const token = window.localStorage.getItem('token')
 if (!token) {
@@ -16,7 +16,7 @@ users.getUser().then(data => {
   document.getElementById('avatarImage').onclick = () => {
     window.location.replace('https://ru.gravatar.com/' + data.email.split('@')[0])
   }
-  document.getElementById('email').innerHTML = data.email
+  document.getElementById('UserEmail').innerHTML = data.email
 })
 
 function renderNotes (order) {
@@ -54,34 +54,34 @@ document.getElementById('changeOrder').onclick = () => {
 }
 
 // document.getElementById('globalSettingsIcons').onclick = () => {
-  // const note = {
-  //   themeInput: document.getElementById('noteTheme'),
-  //   textInput: document.getElementById('textNote')
-  // }
-  // const noteData = {
-  //   theme: note.themeInput.value,
-  //   text: note.textInput.value
-  // }
-  // if (noteData.theme === '') {
-  //   noteData.theme = '[WITHOUT TITLE]'
-  // }
-  // note.themeInput.value = ''
-  // note.textInput.value = ''
-  //
-  // notes.sendNote(noteData)
-  // .then(result => {
-  //   const newDiv = createNoteDiv({
-  //     id: result.id,
-  //     theme: noteData.theme,
-  //     text: noteData.text,
-  //     updatedAt: result.updatedAt
-  //   })
-  //   if (getOrder() === -1) {
-  //     notesList.insertBefore(newDiv, notesList.firstChild)
-  //   } else {
-  //     notesList.appendChild(newDiv)
-  //   }
-  // })
+//   const note = {
+//     themeInput: document.getElementById('noteTheme'),
+//     textInput: document.getElementById('textNote')
+//   }
+//   const noteData = {
+//     theme: note.themeInput.value,
+//     text: note.textInput.value
+//   }
+//   if (noteData.theme === '') {
+//     noteData.theme = '[WITHOUT TITLE]'
+//   }
+//   note.themeInput.value = ''
+//   note.textInput.value = ''
+//
+//   notes.sendNote(noteData)
+//   .then(result => {
+//     const newDiv = createNoteDiv({
+//       id: result.id,
+//       theme: noteData.theme,
+//       text: noteData.text,
+//       updatedAt: result.updatedAt
+//     })
+//     if (getOrder() === -1) {
+//       notesList.insertBefore(newDiv, notesList.firstChild)
+//     } else {
+//       notesList.appendChild(newDiv)
+//     }
+//   })
 // }
 
 document.getElementById('sendNote').onclick = () => {
@@ -93,6 +93,12 @@ document.getElementById('sendNote').onclick = () => {
     theme: note.themeInput.value,
     text: note.textInput.value
   }
+
+  if (noteData.theme === '' && noteData.text === '') {
+    errorHandler({message: 'You didn\'t enter a subject and note text.'})
+    return
+  }
+
   if (noteData.theme === '') {
     noteData.theme = '[WITHOUT TITLE]'
   }
@@ -195,6 +201,9 @@ const createNoteDiv = (note) => {
 
   function handleNoteSave () {
     setButtonToSave()
+    if (noteTextBoxTheme.value === '') {
+      noteTextBoxTheme.value = '[WITHOUT TITLE]'
+    }
     notes.editNote(note.id, noteTextBoxTheme.value, noteTextBox.value)
       .then(updatedNote => {
         const dateAndTimeArr = formatDate(updatedNote.updatedAt).toUpperCase().split(', ')

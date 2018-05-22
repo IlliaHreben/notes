@@ -1,6 +1,4 @@
-const connect = require('../model')
-
-const confirmUser = ({user}) => {
+const confirmUser = ({user}, connect) => {
   return connect
     .then(db => {
       const users = db.collection('users')

@@ -1,6 +1,4 @@
-const connect = require('../model')
-
-const getNotes = ({order, userId}) => {
+const getNotes = ({order, userId}, connect) => {
   return connect
     .then(db => {
       const notes = db.collection('notes')

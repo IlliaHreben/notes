@@ -1,10 +1,9 @@
 const ServiceError = require('../ServiceError')
 const {secret} = require('../config')
-const connect = require('../model')
 const bcrypt = require('bcryptjs')
 const jwt = require('jwt-simple')
 
-const authUser = ({email, password}) => connect
+const authUser = ({email, password}, connect) => connect
   .then(db => {
     const users = db.collection('users')
     return users.findOne({email})
