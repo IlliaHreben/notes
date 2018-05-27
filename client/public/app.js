@@ -94,12 +94,12 @@ document.getElementById('sendNote').onclick = () => {
     text: note.textInput.value
   }
 
-  if (noteData.theme === '' && noteData.text === '') {
+  if (!noteData.theme && !noteData.text) {
     errorHandler({message: 'You didn\'t enter a subject and note text.'})
     return
   }
 
-  if (noteData.theme === '') {
+  if (!noteData.theme) {
     noteData.theme = '[WITHOUT TITLE]'
   }
   note.themeInput.value = ''
@@ -201,7 +201,7 @@ const createNoteDiv = (note) => {
 
   function handleNoteSave () {
     setButtonToSave()
-    if (noteTextBoxTheme.value === '') {
+    if (!noteTextBoxTheme.value) {
       noteTextBoxTheme.value = '[WITHOUT TITLE]'
     }
     notes.editNote(note.id, noteTextBoxTheme.value, noteTextBox.value)
