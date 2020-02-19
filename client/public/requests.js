@@ -103,6 +103,13 @@ function errorHandler (errorResult) {
   errorDiv.appendChild(errorSpan)
   errorDiv.appendChild(errorSpanMessageNode)
   document.body.appendChild(errorDiv)
+  const delayRemoveDiv = new Promise((resolve, reject) => { // is it correct?
+    setTimeout(() => {
+      resolve(errorDiv)
+    }, 3000)
+  })
+
+  delayRemoveDiv.then(errorDiv => document.body.removeChild(errorDiv))
 }
 
 function handleResponse (res) {

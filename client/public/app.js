@@ -8,7 +8,7 @@ if (!token) {
 }
 
 function getOrder () {
-  return Number.parseInt(window.localStorage.getItem('sortOrder') || '-1') // оптимизировать
+  return Number.parseInt(window.localStorage.getItem('sortOrder')) || -1 // оптимизировано
 }
 
 users.getUser().then(data => {
