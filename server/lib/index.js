@@ -24,11 +24,17 @@ const resToClient = (res, promise) => {
       if (error instanceof ServiceError) {
         res
           .status(400)
-          .send({ok: false, error: {message: error.message, code: error.code}})
+          .send({
+            ok: false,
+            error: {message: error.message, code: error.code}
+          })
       } else {
         res
           .status(500)
-          .send({ok: false, error: {message: 'unknown server error', code: 'UNKNOWN_ERROR'}})
+          .send({
+            ok: false,
+            error: {message: 'unknown server error', code: 'UNKNOWN_ERROR'}
+          })
       }
     })
 }

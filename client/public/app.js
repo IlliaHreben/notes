@@ -94,7 +94,7 @@ document.getElementById('sendNote').onclick = () => {
     text: note.textInput.value
   }
 
-  if (!noteData.theme && !noteData.text) {
+  if (!noteData.text) {
     errorHandler({message: 'You didn\'t enter a subject and note text.'})
     return
   }

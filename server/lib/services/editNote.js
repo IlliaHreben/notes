@@ -13,7 +13,7 @@ const editNote = ({id, theme, text, userId}, connect) => {
           }
           throw new ServiceError('Cannot edit note.', 'WRONG_ID')
         })
-        .then(() => notes.update(
+        .then(() => notes.updateOne(
           {_id: new ObjectID(id)},
           {'$set': {theme, text, updatedAt}}
         ))
