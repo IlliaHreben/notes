@@ -2,13 +2,14 @@ const ServiceError = require('../ServiceError')
 const {secret, domain, emailFrom, emailApiKey, emailDomain} = require('../config')
 const connect = require('../model')
 const bcrypt = require('bcryptjs')
-const saltRounds = 10
 const jwt = require('jwt-simple')
 const {promisify} = require('util')
 const isValidEmail = require('is-valid-email')
 
 const mailgun = require('nodemailer-mailgun-transport')
 const nodemailer = require('nodemailer')
+
+const saltRounds = 10
 
 const auth = {
   auth: {

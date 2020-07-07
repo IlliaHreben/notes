@@ -1,7 +1,6 @@
 const express = require('express')
 const serveStatic = require('serve-static')
 const bodyParser = require('body-parser')
-// const service = require('./service')
 const ServiceError = require('./ServiceError')
 const config = require('./config')
 const authUser = require('./services/authUser')
@@ -39,9 +38,13 @@ const resToClient = (res, promise) => {
     })
 }
 
-const app = express()
-  .use(serveStatic('../client/public', {extensions: ['html']}))
-  .use(bodyParser.json())
+function checkUser (req, res, next) {
+  checkUserId(req.headers.authorization || req.query.authorization)
+    .then(user => {
+      req.context = {user}
+      next()
+    })
+}
 
 const notes = express.Router()
   .use(checkUser)
@@ -96,14 +99,9 @@ const api = express.Router()
     resToClient(res, getUser(req.context))
   })
 
-function checkUser (req, res, next) {
-  checkUserId(req.headers.authorization || req.query.authorization)
-    .then(user => {
-      req.context = {user}
-      next()
-    })
-}
 
-app.use('/api', api)
-
-app.listen(config.port)
+express()
+  .use(serveStatic('../client/public', {extensions: ['html']}))
+  .use(bodyParser.json())
+  .use('/api', api)
+  .listen(config.port)

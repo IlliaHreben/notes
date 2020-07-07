@@ -95,7 +95,7 @@ document.getElementById('sendNote').onclick = () => {
   }
 
   if (!noteData.text) {
-    errorHandler({message: 'You didn\'t enter a subject and note text.'})
+    errorHandler({message: 'You didn\'t enter a note text.'})
     return
   }
 
